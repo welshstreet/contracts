@@ -101,11 +101,11 @@ export function setupExchangeLiquidity(disp: boolean = false) {
     const reserveBAfterWallet1 = currentReserveB + amountB;
     const lpSupplyAfterWallet1 = currentLpSupply + mintedLpWallet;
     
-    // STEP 6: Calculate exact values for wallet2 liquidity provision (using updated reserves)
+    // STEP 6: Calculate exact values for wallet2 liquidity provision (same amount as wallet1)
     const amountB2 = Math.floor((amountA * reserveBAfterWallet1) / reserveAAfterWallet1);
     const mintedLpWallet2 = Math.floor((amountA * lpSupplyAfterWallet1) / reserveAAfterWallet1);
     
-    // STEP 7: Wallet2 provides liquidity (exact values)
+    // STEP 7: Wallet2 provides liquidity (same amount as wallet1)
     provideLiquidity(amountA, amountA, amountB2, mintedLpWallet2, wallet2, disp);
     
     // STEP 8: Final state after both wallets add liquidity
@@ -113,15 +113,15 @@ export function setupExchangeLiquidity(disp: boolean = false) {
     const reserveBAfterWallet2 = reserveBAfterWallet1 + amountB2;
     const lpSupplyAfterWallet2 = lpSupplyAfterWallet1 + mintedLpWallet2;
     
-    // Return state information (without swaps for now - we can add them step by step)
+    // Return state information (both wallet1 and wallet2 have provided liquidity)
     return {
         availAExpected: reserveAAfterWallet2,     // available = reserves (no locked liquidity yet)
         availBExpected: reserveBAfterWallet2,     // available = reserves (no locked liquidity yet)
         feeExpected: initialSetup.feeExpected,                         // default fee unchanged
         lockedAExpected: initialSetup.lockedAExpected,                       // no locked liquidity yet
         lockedBExpected: initialSetup.lockedBExpected,                       // no locked liquidity yet
-        reserveAExpected: reserveAAfterWallet2,   // final reserves after all liquidity
-        reserveBExpected: reserveBAfterWallet2,   // final reserves after all liquidity
+        reserveAExpected: reserveAAfterWallet2,   // final reserves after both wallets liquidity
+        reserveBExpected: reserveBAfterWallet2,   // final reserves after both wallets liquidity
         revenueExpected: initialSetup.revenueExpected,                     // default revenue unchanged
         taxExpected: initialSetup.taxExpected,                          // default tax unchanged
         totalLpSupply: lpSupplyAfterWallet2

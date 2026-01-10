@@ -98,15 +98,19 @@
 
 ;; #[allow(unchecked_data)]
 (define-public (burn-liquidity (amount-lp uint))
+  (let (
+    (total-supply-lp (unwrap-panic (contract-call? .credit get-total-supply)))
+    (lp-balance (unwrap-panic (contract-call? .credit get-balance tx-sender)))
+  )
   (begin
     (asserts! (> amount-lp u0) ERR_ZERO_AMOUNT)
+    (try! (contract-call? .rewards update-burn-rewards tx-sender amount-lp))
     (try! (contract-call? .credit transfer amount-lp tx-sender .exchange none))
     (try! (as-contract (contract-call? .credit credit-burn amount-lp)))
-    (try! (contract-call? .rewards update-user-rewards tx-sender))
     (ok {
       burned-lp: amount-lp,
     })
-  )
+  ))
 )
 
 ;; #[allow(unchecked_data)]
@@ -176,7 +180,7 @@
     (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .exchange none))
     (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
     (try! (contract-call? .credit credit-mint amount-lp))
-    (try! (contract-call? .rewards update-user-rewards tx-sender))
+    (try! (contract-call? .rewards update-provide-rewards tx-sender amount-lp))
     (var-set reserve-a amount-a)
     (var-set reserve-b amount-b)
     (ok {
@@ -197,6 +201,7 @@
     (avail-a (if (>= res-a lock-a) (- res-a lock-a) u0))
     (avail-b (if (>= res-b lock-b) (- res-b lock-b) u0))
     (total-supply-lp (unwrap-panic (contract-call? .credit get-total-supply)))
+    (lp-balance (unwrap-panic (contract-call? .credit get-balance tx-sender)))
     (amount-b (if (is-eq avail-a u0) u0 (/ (* amount-a avail-b) avail-a)))
     (amount-lp (if (or (is-eq total-supply-lp u0) (and (is-eq avail-a u0) (is-eq avail-b u0)))
       (sqrti (* amount-a amount-b))
@@ -215,7 +220,7 @@
       (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .exchange none))
       (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
       (try! (contract-call? .credit credit-mint amount-lp))
-      (try! (contract-call? .rewards update-user-rewards tx-sender))
+      (try! (contract-call? .rewards update-provide-rewards tx-sender amount-lp))
       (var-set reserve-a (+ res-a amount-a))
       (var-set reserve-b (+ res-b amount-b))
     (ok {
@@ -236,6 +241,7 @@
     (avail-a (if (>= res-a lock-a) (- res-a lock-a) u0))
     (avail-b (if (>= res-b lock-b) (- res-b lock-b) u0))
     (total-supply-lp (unwrap-panic (contract-call? .credit get-total-supply)))
+    (lp-balance (unwrap-panic (contract-call? .credit get-balance tx-sender)))
     (amount-a (/ (* amount-lp avail-a) total-supply-lp))
     (amount-b (/ (* amount-lp avail-b) total-supply-lp))
     (tax-a (/ (* amount-a (var-get tax)) BASIS))
@@ -248,8 +254,8 @@
       (try! (contract-call? .credit transfer amount-lp tx-sender .exchange none))
       (try! (transformer .welshcorgicoin user-amount-a tx-sender))
       (try! (transformer .street user-amount-b tx-sender))
+      (try! (contract-call? .rewards update-remove-rewards tx-sender amount-lp))
       (try! (as-contract (contract-call? .credit credit-burn amount-lp)))
-      (try! (contract-call? .rewards update-user-rewards tx-sender))
       (var-set reserve-a (if (>= res-a user-amount-a) (- res-a user-amount-a) u0))
       (var-set reserve-b (if (>= res-b user-amount-b) (- res-b user-amount-b) u0))
       (var-set locked-a (+ lock-a tax-a))

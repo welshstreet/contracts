@@ -34,8 +34,10 @@ describe("=== REWARDS READ ONLY FUNCTIONS TESTS ===", () => {
 
         // STEP 2: Check deployer's reward info
         // After initial liquidity provision, deployer should have LP tokens but no rewards yet
+        // IMPORTANT: provide-initial-liquidity NOW calls update-provide-rewards
+        // This creates the user-rewards map entry (needed for future burn redistribution)
         const balanceLpExpected = setup.mintedLpExpected;  // LP tokens from setup
-        const blockLpExpected = 5;       // Block at which deployer last changed their LP position
+        const blockLpExpected = 5;       // Updated by provide-initial-liquidity
         const debtAExpected = 0;         // No debt initially
         const debtBExpected = 0;         // No debt initially
         const earnedAExpected = 0;       // No rewards earned yet

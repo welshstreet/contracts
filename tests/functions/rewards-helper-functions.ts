@@ -581,3 +581,160 @@ export function getRewardUserInfo(
         unclaimedB: receivedUnclaimedB
     };
 }
+
+export function updateBurnRewards(
+    user: any,
+    oldBalance: number,
+    sender: any,
+    disp: boolean = false
+) {
+    const test = simnet.callPublicFn(
+        "rewards",
+        "update-burn-rewards",
+        [Cl.principal(user.address), Cl.uint(oldBalance)],
+        sender
+    );
+
+    if (sender != deployer) {
+        expect(test.result).toEqual(Cl.error(Cl.uint(803))); // ERR_NOT_AUTHORIZED
+        if (disp) {
+            console.log(`☑️ updateBurnRewards Fail: Unauthorized sender - Expected ERR_NOT_AUTHORIZED (803)`);
+        }
+        return false;
+    }
+
+    if (test.result.type === 'err') {
+        const errorCode = Number((test.result as any).value.value);
+        if (disp) {
+            console.log(`☑️ updateBurnRewards Fail: Error ${errorCode}`);
+        }
+        expect(test.result).toEqual(Cl.error(Cl.uint(errorCode)));
+        return false;
+    }
+
+    expect(test.result).toEqual(Cl.ok(Cl.bool(true)));
+
+    if (disp && test.result.type === 'ok') {
+        console.log(`✅ updateBurnRewards Pass: User rewards cleared for complete exit`);
+    }
+    
+    return true;
+}
+
+export function updateSenderRewards(
+    sender: any,
+    transferAmount: number,
+    caller: any,
+    disp: boolean = false
+) {
+    if (disp) {
+        console.log(`\n=== updateSenderRewards: ${transferAmount} ===`);
+        console.log(`Sender: ${sender}, Caller: ${caller}`);
+    }
+
+    const test = simnet.callPublicFn(
+        "rewards",
+        "update-sender-rewards",
+        [
+            Cl.principal(sender),
+            Cl.uint(transferAmount)
+        ],
+        caller
+    );
+
+    if (disp) {
+        console.log(`Result type: ${test.result.type}`);
+    }
+
+    // Check for authorization errors (ERR_NOT_AUTHORIZED - 803)
+    if (test.result.type === 'err') {
+        const errorCode = Number((test.result as any).value.value);
+        if (errorCode === 803) {
+            expect(test.result).toEqual(Cl.error(Cl.uint(803)));
+            if (disp) {
+                console.log(`☑️ Not authorized: Expected ERR_NOT_AUTHORIZED (803)`);
+            }
+            return false;
+        } else if (errorCode === 800) {
+            expect(test.result).toEqual(Cl.error(Cl.uint(800)));
+            if (disp) {
+                console.log(`☑️ Zero amount: Expected ERR_ZERO_AMOUNT (800)`);
+            }
+            return false;
+        } else {
+            if (disp) {
+                console.log(`☑️ Update sender rewards failed with error: ${errorCode}`);
+            }
+            expect(test.result).toEqual(Cl.error(Cl.uint(errorCode)));
+            return false;
+        }
+    }
+
+    // Success case - expect (ok true)
+    expect(test.result).toEqual(Cl.ok(Cl.bool(true)));
+    
+    if (disp && test.result.type === 'ok') {
+        console.log(`✅ Update sender rewards successful for ${sender}`);
+    }
+    
+    return true;
+}
+
+export function updateRecipientRewards(
+    recipient: any,
+    transferAmount: number,
+    caller: any,
+    disp: boolean = false
+) {
+    if (disp) {
+        console.log(`\n=== updateRecipientRewards: ${transferAmount} to ${recipient} ===`);
+        console.log(`Caller: ${caller}`);
+    }
+
+    const test = simnet.callPublicFn(
+        "rewards",
+        "update-recipient-rewards",
+        [
+            Cl.principal(recipient),
+            Cl.uint(transferAmount)
+        ],
+        caller
+    );
+
+    if (disp) {
+        console.log(`Result type: ${test.result.type}`);
+    }
+
+    // Check for authorization errors (ERR_NOT_AUTHORIZED - 803)
+    if (test.result.type === 'err') {
+        const errorCode = Number((test.result as any).value.value);
+        if (errorCode === 803) {
+            expect(test.result).toEqual(Cl.error(Cl.uint(803)));
+            if (disp) {
+                console.log(`☑️ Not authorized: Expected ERR_NOT_AUTHORIZED (803)`);
+            }
+            return false;
+        } else if (errorCode === 800) {
+            expect(test.result).toEqual(Cl.error(Cl.uint(800)));
+            if (disp) {
+                console.log(`☑️ Zero amount: Expected ERR_ZERO_AMOUNT (800)`);
+            }
+            return false;
+        } else {
+            if (disp) {
+                console.log(`☑️ Update recipient rewards failed with error: ${errorCode}`);
+            }
+            expect(test.result).toEqual(Cl.error(Cl.uint(errorCode)));
+            return false;
+        }
+    }
+
+    // Success case - expect (ok true)
+    expect(test.result).toEqual(Cl.ok(Cl.bool(true)));
+    
+    if (disp && test.result.type === 'ok') {
+        console.log(`✅ Update recipient rewards successful for ${recipient}`);
+    }
+    
+    return true;
+}

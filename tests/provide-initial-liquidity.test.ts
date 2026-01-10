@@ -1,5 +1,5 @@
 import { describe, it } from "vitest";
-import { disp, INITIAL_WELSH, INITIAL_STREET, MINT_AMOUNT } from "./vitestconfig"
+import { disp, INITIAL_WELSH, INITIAL_STREET, MINT_AMOUNT, FEE, REV } from "./vitestconfig"
 import { getExchangeInfo, provideInitialLiquidity } from "./functions/exchange-helper-functions";
 import { streetMint } from "./functions/street-helper-functions";
 import { getBalance } from "./functions/shared-read-only-helper-functions";
@@ -38,13 +38,13 @@ describe("=== PROVIDE INITIAL LIQUIDITY TESTS ===", () => {
         // STEP 4: Validate exchange state after providing liquidity
         const availAExpected = amountA;  // reserve-a - locked-a = INITIAL_WELSH - 0
         const availBExpected = amountB; // reserve-b - locked-b = INITIAL_STREET - 0
-        const feeExpected = 100;               // default fee
+        const feeExpected = FEE;               // default fee from vitestconfig
         const lockedAExpected = 0;             // no locked liquidity initially
         const lockedBExpected = 0;             // no locked liquidity initially
         const reserveAExpected = amountA; // reserves now contain the liquidity
         const reserveBExpected = amountB;
-        const revenueExpected = 100;           // default revenue
-        const taxExpected = 100;               // default tax
+        const revenueExpected = REV;           // default revenue from vitestconfig
+        const taxExpected = FEE;               // default tax (same as fee) from vitestconfig
 
         getExchangeInfo(
             availAExpected,

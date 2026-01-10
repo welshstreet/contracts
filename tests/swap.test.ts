@@ -153,10 +153,20 @@ describe("=== SWAP TESTS ===", () => {
             disp
         );
         
-        // STEP 4: Calculate expected proportional locked amounts after swap
+        // STEP 4: Calculate expected proportional locked amounts after swap  
         // The proportional fix should maintain: lock_new = (lock_old * reserve_new) / reserve_old
-        const expectedLockedA = Math.floor((reservesAfterLock.lockedA * newReserveA) / reservesAfterLock.reserveA);
-        const expectedLockedB = Math.floor((reservesAfterLock.lockedB * newReserveB) / reservesAfterLock.reserveB);
+        // Use BigInt to ensure precise integer arithmetic matching the contract
+        const lockedABig = BigInt(reservesAfterLock.lockedA);
+        const lockedBBig = BigInt(reservesAfterLock.lockedB);
+        const reserveABig = BigInt(reservesAfterLock.reserveA);
+        const reserveBBig = BigInt(reservesAfterLock.reserveB);
+        const newReserveABig = BigInt(newReserveA);
+        const newReserveBBig = BigInt(newReserveB);
+        
+        const expectedLockedA = Number((lockedABig * newReserveABig) / reserveABig);
+        const expectedLockedB = Number((lockedBBig * newReserveBBig) / reserveBBig);
+        
+        // Calculate available amounts (contract does: avail = reserve - locked)
         const expectedAvailA = newReserveA - expectedLockedA;
         const expectedAvailB = newReserveB - expectedLockedB;
         
