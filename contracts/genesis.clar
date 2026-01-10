@@ -62,9 +62,9 @@
 (use-trait sip-010 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
 ;; errors
-(define-constant ERR_ZERO_AMOUNT (err u500))
-(define-constant ERR_NOT_CONTRACT_OWNER (err u501))
-(define-constant ERR_NOT_ACTIVE_FUND (err u502))
+(define-constant ERR_ZERO_AMOUNT (err u1000))
+(define-constant ERR_NOT_CONTRACT_OWNER (err u1001))
+(define-constant ERR_NOT_ACTIVE_FUND (err u1002))
 
 ;; metadata
 (define-constant CONTRACT_OWNER tx-sender)
@@ -146,12 +146,12 @@
     (let (
         (balance (unwrap-panic (contract-call? .welshcorgicoin get-balance .genesis)))
     )
-    (begin
-        (asserts! (> balance u0) ERR_ZERO_AMOUNT)
-        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_NOT_CONTRACT_OWNER)
-        (try! (transformer .welshcorgicoin balance CONTRACT_OWNER))
-        (ok balance)
-    )
+        (begin
+            (asserts! (> balance u0) ERR_ZERO_AMOUNT)
+            (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_NOT_CONTRACT_OWNER)
+            (try! (transformer .welshcorgicoin balance CONTRACT_OWNER))
+            (ok balance)
+        )
     )
 )
 
