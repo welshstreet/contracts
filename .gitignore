@@ -14,6 +14,7 @@ templates/
 
 Mainnet.toml
 Testnet.toml
+Devnet.toml
 
 logs
 *.log
