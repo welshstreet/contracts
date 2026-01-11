@@ -75,5 +75,4 @@ The contracts form an integrated DeFi ecosystem where:
 - **AMM Trading**: Constant product formula (x*y=k) with fee integration
 - **Liquidity Mining**: LP token holders earn trading fees from both tokens
 - **Emission Rewards**: STREET token emissions distributed to liquidity providers
-- **Tax Mechanism**: 10% tax on liquidity removal, tokens are burned
 - **Slippage Protection**: Configurable slippage limits for trades
