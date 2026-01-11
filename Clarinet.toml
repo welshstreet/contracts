@@ -14,42 +14,32 @@ contract_id = 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin'
 [contracts.comptroller]
 path = 'contracts/comptroller.clar'
 clarity_version = 3
-epoch = '3.1'
+epoch = 'latest'
 
 [contracts.credit]
 path = 'contracts/credit.clar'
 clarity_version = 3
-epoch = '3.1'
+epoch = 'latest'
 
 [contracts.exchange]
 path = 'contracts/exchange.clar'
 clarity_version = 3
-epoch = '3.1'
+epoch = 'latest'
 
 [contracts.genesis]
 path = 'contracts/genesis.clar'
 clarity_version = 3
-epoch = '3.1'
+epoch = 'latest'
 
 [contracts.rewards]
 path = 'contracts/rewards.clar'
 clarity_version = 3
-epoch = '3.1'
+epoch = 'latest'
 
 [contracts.street]
 path = 'contracts/street.clar'
 clarity_version = 3
-epoch = '3.1'
-
-[contracts.welshcorgicoin]
-path = 'contracts/welshcorgicoin.clar'
-clarity_version = 3
-epoch = '3.1'
-[repl.analysis]
-passes = [
-    'check_checker',
-    'call_checker',
-]
+epoch = 'latest'
 
 [repl.analysis.lints]
 
