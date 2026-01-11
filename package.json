@@ -20,6 +20,6 @@
     "@types/node": "^22.15.18",
     "chokidar-cli": "^3.0.0",
     "vitest": "^4.0.7",
-    "vitest-environment-clarinet": "3.0.1"
+    "vitest-environment-clarinet": "^3.0.2"
   }
 }

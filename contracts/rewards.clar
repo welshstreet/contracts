@@ -59,7 +59,10 @@
 ;; END OF DISCLAIMER
 ;; -------------------------------------------------------------------------
 
-(use-trait sip-010 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
+(use-trait sip-010 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.sip-010-trait)
+
+;; welshcorgicoin
+(define-constant WELSH 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
 
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u800))
@@ -153,7 +156,7 @@
 
 (define-public (cleanup-rewards)
   (let (
-    (actual-a (unwrap-panic (contract-call? .welshcorgicoin get-balance .rewards)))
+    (actual-a (unwrap-panic (contract-call? WELSH get-balance .rewards)))
     (actual-b (unwrap-panic (contract-call? .street get-balance .rewards)))
     (distributed-a (var-get total-distributed-a))
     (distributed-b (var-get total-distributed-b))
@@ -196,7 +199,7 @@
     (begin
       (if (> amount-a u0)
       (begin
-        (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .rewards none))
+        (try! (contract-call? WELSH transfer amount-a tx-sender .rewards none))
         (try! (as-contract (update-rewards-a amount-a)))
       )
         true
@@ -663,7 +666,7 @@
 
 (define-read-only (get-cleanup-rewards)
   (let (
-    (actual-a (unwrap-panic (contract-call? .welshcorgicoin get-balance .rewards)))
+    (actual-a (unwrap-panic (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin get-balance .rewards)))
     (actual-b (unwrap-panic (contract-call? .street get-balance .rewards)))
     (distributed-a (var-get total-distributed-a))
     (distributed-b (var-get total-distributed-b))
@@ -707,7 +710,7 @@
     (ok {
       global-index-a: (var-get global-index-a),
       global-index-b: (var-get global-index-b),
-      rewards-a: (unwrap-panic (contract-call? .welshcorgicoin get-balance .rewards)),
+      rewards-a: (unwrap-panic (contract-call? WELSH get-balance .rewards)),
       rewards-b: (unwrap-panic (contract-call? .street get-balance .rewards)),
     })
 )
