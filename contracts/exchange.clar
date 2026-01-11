@@ -82,6 +82,9 @@
 (define-constant MIN_REV u50)
 (define-constant MIN_TAX u50)
 
+;; welshcorgicoin
+(define-constant WELSH 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
+
 ;; variables
 (define-data-var contract-owner principal tx-sender)
 (define-data-var fee uint u100)
@@ -136,7 +139,7 @@
     (asserts! (if (is-eq res-a u0)
       (is-eq tx-sender (var-get contract-owner))
       true) ERR_NOT_INITIALIZED)
-    (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .exchange none))
+    (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
     (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
     (var-set locked-a (+ lock-a amount-a))
     (var-set locked-b (+ lock-b amount-b))
@@ -177,7 +180,7 @@
       (and (is-eq res-a u0) (is-eq res-b u0))
       (is-eq total-supply-lp u0))
       ERR_ALREADY_INITIALIZED)
-    (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .exchange none))
+    (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
     (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
     (try! (contract-call? .credit credit-mint amount-lp))
     (try! (contract-call? .rewards update-provide-rewards tx-sender amount-lp))
@@ -217,7 +220,7 @@
     (asserts! (if (and (is-eq avail-a u0) (is-eq res-a u0))
         (is-eq tx-sender (var-get contract-owner))
         true) ERR_NOT_INITIALIZED)
-      (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .exchange none))
+      (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
       (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
       (try! (contract-call? .credit credit-mint amount-lp))
       (try! (contract-call? .rewards update-provide-rewards tx-sender amount-lp))
@@ -252,7 +255,7 @@
     (begin
       (asserts! (> amount-lp u0) ERR_ZERO_AMOUNT)
       (try! (contract-call? .credit transfer amount-lp tx-sender .exchange none))
-      (try! (transformer .welshcorgicoin user-amount-a tx-sender))
+      (try! (transformer WELSH user-amount-a tx-sender))
       (try! (transformer .street user-amount-b tx-sender))
       (try! (contract-call? .rewards update-remove-rewards tx-sender amount-lp))
       (try! (as-contract (contract-call? .credit credit-burn amount-lp)))
@@ -294,9 +297,9 @@
     (begin
       (asserts! (> amount-a u0) ERR_ZERO_AMOUNT)
       (asserts! (> amount-b-net u0) ERR_INVALID_AMOUNT)
-      (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .exchange none))
-      (try! (transformer .welshcorgicoin rev-a treasury))
-      (try! (transformer .welshcorgicoin fee-a .rewards))
+      (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
+      (try! (transformer WELSH rev-a treasury))
+      (try! (transformer WELSH fee-a .rewards))
       (try! (transformer .street amount-b-net tx-sender))
       (try! (contract-call? .rewards update-rewards-a fee-a))
       (var-set reserve-a res-a-new)
@@ -343,7 +346,7 @@
       (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
       (try! (transformer .street rev-b treasury))
       (try! (transformer .street fee-b .rewards))
-      (try! (transformer .welshcorgicoin amount-a-net tx-sender))
+      (try! (transformer WELSH amount-a-net tx-sender))
       (try! (contract-call? .rewards update-rewards-b fee-b))
       (var-set reserve-a res-a-new)
       (var-set reserve-b res-b-new)
