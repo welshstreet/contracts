@@ -16,6 +16,14 @@ plan:
             cost: 8400
             path: "./.cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
             clarity-version: 1
+        - requirement-publish:
+            contract-id: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin
+            remap-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            remap-principals:
+              ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 8400
+            path: "./.cache/requirements/ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin.clar"
+            clarity-version: 3
       epoch: "2.0"
     - id: 1
       transactions:
