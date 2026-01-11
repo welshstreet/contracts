@@ -61,6 +61,9 @@
 
 (use-trait sip-010 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
+;; welshcorgicoin
+(define-constant WELSH 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
+
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u700))
 (define-constant ERR_NOT_CONTRACT_OWNER (err u701))
@@ -81,9 +84,6 @@
 (define-constant MIN_FEE u50)
 (define-constant MIN_REV u50)
 (define-constant MIN_TAX u50)
-
-;; welshcorgicoin
-(define-constant WELSH 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
 
 ;; variables
 (define-data-var contract-owner principal tx-sender)
