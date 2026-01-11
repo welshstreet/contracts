@@ -61,8 +61,8 @@
 
 (use-trait sip-010 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.sip-010-trait)
 
-;; welshcorgicoin
-(define-constant WELSH 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
+;; welshcorgicoin - use .welshcorgicoin for local devnet
+(define-constant WELSH .welshcorgicoin)
 
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u1000))
