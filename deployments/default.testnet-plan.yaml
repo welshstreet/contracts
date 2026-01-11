@@ -16,54 +16,48 @@ plan:
             cost: 8400
             path: "./.cache/requirements/SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.clar"
             clarity-version: 1
-        - requirement-publish:
-            contract-id: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin
-            remap-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 0
-            path: "./.cache/requirements/ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin.clar"
-            clarity-version: 3
       epoch: "2.0"
     - id: 1
       transactions:
         - contract-publish:
             contract-name: credit
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 646991
+            cost: 581575
             path: contracts/credit.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: street
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 648154
+            cost: 582620
             path: contracts/street.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: rewards
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 659205
+            cost: 592554
             path: contracts/rewards.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: comptroller
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 646177
+            cost: 580843
             path: contracts/comptroller.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: exchange
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 653389
+            cost: 587430
             path: contracts/exchange.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: genesis
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
-            cost: 647805
+            cost: 582307
             path: contracts/genesis.clar
             anchor-block-only: true
             clarity-version: 3

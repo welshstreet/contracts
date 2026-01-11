@@ -118,7 +118,7 @@
   )
     (begin
       (if (> claimed-a u0)
-        (try! (transformer .welshcorgicoin claimed-a tx-sender))
+        (try! (transformer WELSH claimed-a tx-sender))
         true
       )
       (if (> claimed-b u0)

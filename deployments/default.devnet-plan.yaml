@@ -22,42 +22,42 @@ plan:
         - contract-publish:
             contract-name: credit
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 35880
+            cost: 57720
             path: contracts/credit.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: street
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 56340
+            cost: 77480
             path: contracts/street.clar
-            anchor-block-only: true
-            clarity-version: 3
-        - contract-publish:
-            contract-name: welshcorgicoin
-            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 21860
-            path: contracts/welshcorgicoin.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: rewards
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 127050
+            cost: 276650
             path: contracts/rewards.clar
+            anchor-block-only: true
+            clarity-version: 3
+        - contract-publish:
+            contract-name: comptroller
+            expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            cost: 43740
+            path: contracts/comptroller.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: exchange
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 148950
+            cost: 174080
             path: contracts/exchange.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: genesis
             expected-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            cost: 50930
+            cost: 72200
             path: contracts/genesis.clar
             anchor-block-only: true
             clarity-version: 3
