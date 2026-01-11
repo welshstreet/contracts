@@ -1,4 +1,4 @@
-;; Welsh Street Exchange
+;;Welsh Street Exchange
 
 (use-trait sip-010 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.sip-010-trait)
 

@@ -59,7 +59,7 @@
   )
     (begin
       (if (> claimed-a u0)
-        (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin claimed-a tx-sender))
+        (try! (transformer .welshcorgicoin claimed-a tx-sender))
         true
       )
       (if (> claimed-b u0)
@@ -94,7 +94,7 @@
 
 (define-public (cleanup-rewards)
   (let (
-    (actual-a (unwrap-panic (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin get-balance .rewards)))
+    (actual-a (unwrap-panic (contract-call? .welshcorgicoin get-balance .rewards)))
     (actual-b (unwrap-panic (contract-call? .street get-balance .rewards)))
     (distributed-a (var-get total-distributed-a))
     (distributed-b (var-get total-distributed-b))
@@ -137,7 +137,7 @@
     (begin
       (if (> amount-a u0)
       (begin
-        (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount-a tx-sender .rewards none))
+        (try! (contract-call? .welshcorgicoin transfer amount-a tx-sender .rewards none))
         (try! (as-contract (update-rewards-a amount-a)))
       )
         true
@@ -648,7 +648,7 @@
     (ok {
       global-index-a: (var-get global-index-a),
       global-index-b: (var-get global-index-b),
-      rewards-a: (unwrap-panic (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin get-balance .rewards)),
+      rewards-a: (unwrap-panic (contract-call? .welshcorgicoin get-balance .rewards)),
       rewards-b: (unwrap-panic (contract-call? .street get-balance .rewards)),
     })
 )

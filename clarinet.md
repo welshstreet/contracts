@@ -1,13 +1,16 @@
 # Welsh Street Contracts - Clarinet Troubleshooting Log
 
 ## Objective
-Deploy Welsh Street DEX contracts to testnet while referencing the **existing** welshcorgicoin contract already deployed at:
+Deploy Welsh Street DEX contracts to **testnet** while referencing the **existing** welshcorgicoin contract deployed on **mainnet** at:
 `ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin`
 
+**⚠️ IMPORTANT NETWORK LIMITATION**: Testnet deployments cannot directly reference mainnet contracts as they are separate blockchain networks. This contract reference will need to be available on testnet for the deployment to work properly.
+
 ## Problem Summary
-- Trying to generate testnet deployment with `clarinet deployment generate --testnet --medium-cost`
+- Trying to generate **testnet** deployment with `clarinet deployment generate --testnet --medium-cost`
 - Getting contract resolution errors that prevent deployment plan generation
-- Need to reference external welshcorgicoin contract that's already on testnet
+- Need to reference external welshcorgicoin contract (NOT the local welshcorgicoin.clar file)
+- Working with cross-network contract references (mainnet contract → testnet deployment)
 
 ## Troubleshooting Timeline
 
@@ -19,28 +22,32 @@ Deploy Welsh Street DEX contracts to testnet while referencing the **existing** 
 ### Issue 2: External Contract Resolution (RESOLVED ✅)
 **Error**: `NoSuchContract("ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin")`
 - **Cause**: Clarinet cannot resolve external welshcorgicoin contract during analysis phase
+- **Context**: Attempting to reference mainnet-deployed contract from testnet deployment
 - **Attempted Config**: Added requirement in Clarinet.toml (failed)
-- **Solution**: Removed external contract from project.requirements
+- **Solution**: Removed external contract from project.requirements  
 - **Result**: Deployment plan generated successfully with updated costs
+- **Runtime Limitation**: Cross-network references (mainnet → testnet) will not work at runtime
 
 ### Analysis - Why This Works (Confirmed by GitHub Issues)
 The error shows Clarinet's dependency resolution system has limitations with external contracts during the analysis phase. However, the contracts don't actually need the external contract to be validated at deployment generation time because:
 
 1. **Static Analysis**: Clarinet only needs to validate the syntax and structure of YOUR contracts
-2. **Runtime Resolution**: The external contract reference (`'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin`) is resolved at runtime when transactions are executed
-3. **Deployment vs Execution**: Deployment plan generation ≠ contract execution
+2. **Runtime Resolution**: The external contract reference would be resolved at runtime when transactions are executed
+3. **Deployment vs Execution**: Deployment plan generation ≠ contract execution  
 4. **Community Confirmation**: GitHub Issue #2122 confirms this is a known Clarinet limitation affecting many developers
+5. **Network Separation**: Testnet and mainnet are separate networks - cross-network references will fail at runtime
 
 ### Final Configuration
 ```toml
-# Clarinet.toml - Only includes trait requirement
+# Clarinet.toml - Only includes trait requirement, no external contract references
 [[project.requirements]]
-contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
+contract_id = 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard'
 ```
 
 ```clarity
-# exchange.clar - Runtime reference remains unchanged  
-(define-constant WELSH 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
+# contracts/*.clar - External mainnet contract references
+# NOTE: These will fail at runtime on testnet due to network separation
+contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin
 ```
 
 ### Issue 3: VSCode/Clarity Extension Cache (RESOLVED ✅)
@@ -50,13 +57,14 @@ contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standa
 - **Solution**: Clear VSCode Clarity extension cache and restart language server
 
 ### Issue 4: Local Contract Validation (CONFIRMED CLARINET LIMITATION)
-**Error**: `clarinet check` fails with external contract requirements
-- **Cause**: Clarinet's local validation cannot resolve testnet contract requirements
+**Error**: `clarinet check` fails with external contract requirements  
+- **Cause**: Clarinet's local validation cannot resolve external contract requirements (especially cross-network)
 - **Configuration**: Used `clarinet requirements add ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin`
 - **GitHub Confirmation**: This is a confirmed bug in Clarinet (see Issue #2122)
 - **Community Impact**: Multiple developers experience this same limitation
 - **Limitation**: Local `clarinet check` expects all contracts to be available locally
-- **Workaround**: Contracts are correctly configured for testnet deployment, validation limitations are tool-specific
+- **Network Issue**: Cannot validate mainnet contract references for testnet deployments  
+- **Workaround**: Contracts are configured for testnet deployment, but will need testnet-deployed welshcorgicoin contract for runtime functionality
 
 ### Issue 5: GitHub Community Confirmation (RESEARCHED ✅)
 **Research**: Searched Clarinet GitHub repository for related issues
@@ -70,11 +78,12 @@ contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standa
   - Clarinet team working on better external contract handling
 
 ### Current Status
-- ✅ Deployment plan generation working
-- ✅ External contract configuration correct  
-- ✅ Testnet deployment ready
+- ✅ Testnet deployment plan generation working
+- ✅ External contract configuration correct (for Clarinet tooling)
+- ✅ Testnet deployment ready 
 - ✅ **Confirmed this is a Clarinet tool limitation, not project misconfiguration**
 - ⚠️  Local validation limited by Clarinet's external contract handling - **KNOWN BUG**
+- ❌ **Runtime Issue**: Mainnet contract references will fail on testnet - **NETWORK SEPARATION**
 
 ### Analysis - VSCode Extension Cache Issue
 The contracts themselves are clean, but the VSCode Clarity extension is holding onto cached analysis results from previous devnet sessions. This is purely a VSCode/IDE issue, not a contract or configuration problem.
@@ -87,13 +96,27 @@ The contracts themselves are clean, but the VSCode Clarity extension is holding 
 
 ## Final Resolution
 
-Based on extensive troubleshooting and GitHub community research, this project setup is **correctly configured**. The `clarinet check` failures are due to **confirmed Clarinet limitations** with external contract resolution, not project configuration errors.
+Based on extensive troubleshooting and GitHub community research, this project setup is **correctly configured for Clarinet tooling**. The `clarinet check` failures are due to **confirmed Clarinet limitations** with external contract resolution, not project configuration errors.
+
+**However, there is a fundamental network architecture issue**: The contracts reference a **mainnet-deployed** welshcorgicoin contract but are being deployed to **testnet**. These are separate blockchain networks and cannot communicate with each other.
 
 ### Validated Working Components
 1. **Deployment Plans**: Generate successfully with proper external contract references
-2. **Runtime Resolution**: External contract calls work correctly during execution  
+2. **Clarinet Tooling**: External contract configuration works for deployment generation
 3. **Project Structure**: Contracts are properly structured and configured
-4. **External References**: Testnet contract addresses are valid and accessible
+4. **External References**: Mainnet contract addresses are valid
+
+### Critical Runtime Limitation
+❌ **Cross-Network Issue**: Testnet contracts cannot call mainnet contracts
+- Mainnet contract: `ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin`  
+- Testnet deployment: Will attempt to call this mainnet address from testnet
+- **Result**: All contract calls to welshcorgicoin will fail at runtime
+
+### Required Solution
+To make this work, you need **one** of these approaches:
+1. **Deploy welshcorgicoin to testnet** and update all contract references
+2. **Deploy everything to mainnet** instead of testnet 
+3. **Use existing testnet welshcorgicoin** if available (different address)
 
 ### Known Limitations (Clarinet Issues #2122, #1655)
 1. **Local Validation**: `clarinet check` cannot resolve custom external contracts
@@ -101,15 +124,22 @@ Based on extensive troubleshooting and GitHub community research, this project s
 3. **Community Impact**: Multiple developers experience these same issues
 
 ### Recommended Development Workflow
-1. **Deployment Validation**: Use `clarinet deployments check --testnet`
-2. **Unit Testing**: Use `npm test` for comprehensive contract validation
-3. **Skip Local Check**: Accept that `clarinet check` will fail with external contracts
-4. **Runtime Testing**: Deploy to testnet for full integration testing
+1. **For Testnet Deployment**: 
+   - Deploy or locate welshcorgicoin contract on testnet
+   - Update all contract references to use testnet welshcorgicoin address
+   - Test deployment and functionality on testnet
+2. **For Mainnet Deployment**:
+   - Keep current mainnet welshcorgicoin references  
+   - Deploy to mainnet where the referenced contract exists
+3. **For Local Development**:
+   - Use local welshcorgicoin.clar contract (already in project)
+   - Reference with `.welshcorgicoin` instead of full principal
+4. **Skip Local Check**: Accept that `clarinet check` will fail with external contracts
 
-This troubleshooting confirms the project is deployment-ready despite local validation limitations.
+This troubleshooting confirms the project is deployment-ready despite local validation limitations, but **requires addressing the cross-network contract reference issue**.
 
-## Next Steps - Development Workflow
-1. **Restart VSCode**: Close and reopen VSCode completely
-2. **Reload Window**: Use Command Palette > "Developer: Reload Window"  
-3. **Restart Language Server**: Command Palette > "Clarity: Restart Language Server"
-4. **Clear VSCode Workspace Cache**: May need to clear workspace-specific cache
+## Next Steps - Resolution Required
+1. **Choose Network Strategy**: Decide whether to deploy to testnet or mainnet
+2. **Update Contract References**: Match contract references to target network
+3. **Deploy Dependencies**: Ensure welshcorgicoin exists on target network  
+4. **Test Integration**: Verify cross-contract calls work on chosen network
