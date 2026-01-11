@@ -1,68 +1,6 @@
-;; Welsh Street Exchange
-;;
-;; -------------------------------------------------------------------------
-;; SMART CONTRACT DISCLAIMER: READ BEFORE USE
-;; -------------------------------------------------------------------------
-;; This smart contract is provided on an AS-IS, AS-AVAILABLE basis with
-;; no warranties of any kind. By interacting with this contract, you agree
-;; to the following terms and conditions:
-;;
-;; 1. NO INVESTMENT OR FINANCIAL PRODUCT
-;;    - This contract, its tokens, and all related functionality are NOT
-;;      financial products and are NOT designed or intended for investment,
-;;      speculation, or financial return.
-;;    - Nothing in this contract constitutes an offer to sell securities,
-;;      investment advice, financial promotion, or solicitation of funds.
-;;
-;; 2. NO GUARANTEES OR WARRANTIES
-;;    - The contract may contain bugs, errors, or unexpected behavior.
-;;    - The developers make NO guarantees regarding uptime, security,
-;;      performance, token behavior, or continued availability.
-;;    - All interactions are irreversible and executed automatically by the
-;;      blockchain without developer control.
-;;
-;; 3. USER RESPONSIBILITY & ASSUMPTION OF RISK
-;;    - You acknowledge that interacting with blockchain contracts carries
-;;      inherent risks, including loss of tokens, market volatility, and
-;;      smart-contract vulnerabilities.
-;;    - You are solely responsible for your wallet, private keys, and all
-;;      transactions initiated by you or your software.
-;;    - You agree that you are using this contract entirely at your own risk.
-;;
-;; 4. NO DEVELOPER LIABILITY
-;;    - The developers, contributors, and associated entities bear NO liability
-;;      for any loss, damage, or claim arising from:
-;;        - Smart-contract malfunction or exploit
-;;        - User error
-;;        - Token value fluctuations
-;;        - Third-party integrations or UI interactions
-;;        - Regulatory actions or changes in law
-;;
-;; 5. NON-CUSTODIAL & PERMISSIONLESS
-;;    - The developers do not custody user funds and cannot intervene,
-;;      modify, reverse, or halt transactions.
-;;    - All transactions are executed autonomously by the network.
-;;
-;; 6. COMPLIANCE WITH LOCAL LAWS
-;;    - You are solely responsible for ensuring that your use of this contract
-;;      complies with all applicable laws, regulations, and tax obligations in
-;;      your jurisdiction.
-;;
-;; 7. USER ACKNOWLEDGEMENT
-;;    By using or interacting with this contract, you confirm that:
-;;      - You have read and understand this disclaimer.
-;;      - You accept all associated risks.
-;;      - You do not rely on the developers for financial gain, support,
-;;        maintenance, or continued operation of this software.
-;;
-;; -------------------------------------------------------------------------
-;; END OF DISCLAIMER
-;; -------------------------------------------------------------------------
+;;Welsh Street Exchange
 
 (use-trait sip-010 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.sip-010-trait)
-
-;; welshcorgicoin - use .welshcorgicoin for local devnet
-(define-constant WELSH .welshcorgicoin)
 
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u700))
@@ -139,7 +77,7 @@
     (asserts! (if (is-eq res-a u0)
       (is-eq tx-sender (var-get contract-owner))
       true) ERR_NOT_INITIALIZED)
-    (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
+    (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount-a tx-sender .exchange none))
     (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
     (var-set locked-a (+ lock-a amount-a))
     (var-set locked-b (+ lock-b amount-b))
@@ -180,7 +118,7 @@
       (and (is-eq res-a u0) (is-eq res-b u0))
       (is-eq total-supply-lp u0))
       ERR_ALREADY_INITIALIZED)
-    (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
+    (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount-a tx-sender .exchange none))
     (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
     (try! (contract-call? .credit credit-mint amount-lp))
     (try! (contract-call? .rewards update-provide-rewards tx-sender amount-lp))
@@ -220,7 +158,7 @@
     (asserts! (if (and (is-eq avail-a u0) (is-eq res-a u0))
         (is-eq tx-sender (var-get contract-owner))
         true) ERR_NOT_INITIALIZED)
-      (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
+      (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount-a tx-sender .exchange none))
       (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
       (try! (contract-call? .credit credit-mint amount-lp))
       (try! (contract-call? .rewards update-provide-rewards tx-sender amount-lp))
@@ -255,7 +193,7 @@
     (begin
       (asserts! (> amount-lp u0) ERR_ZERO_AMOUNT)
       (try! (contract-call? .credit transfer amount-lp tx-sender .exchange none))
-      (try! (transformer WELSH user-amount-a tx-sender))
+      (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin user-amount-a tx-sender))
       (try! (transformer .street user-amount-b tx-sender))
       (try! (contract-call? .rewards update-remove-rewards tx-sender amount-lp))
       (try! (as-contract (contract-call? .credit credit-burn amount-lp)))
@@ -297,9 +235,9 @@
     (begin
       (asserts! (> amount-a u0) ERR_ZERO_AMOUNT)
       (asserts! (> amount-b-net u0) ERR_INVALID_AMOUNT)
-      (try! (contract-call? WELSH transfer amount-a tx-sender .exchange none))
-      (try! (transformer WELSH rev-a treasury))
-      (try! (transformer WELSH fee-a .rewards))
+      (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount-a tx-sender .exchange none))
+      (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin rev-a treasury))
+      (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin fee-a .rewards))
       (try! (transformer .street amount-b-net tx-sender))
       (try! (contract-call? .rewards update-rewards-a fee-a))
       (var-set reserve-a res-a-new)
@@ -346,7 +284,7 @@
       (try! (contract-call? .street transfer amount-b tx-sender .exchange none))
       (try! (transformer .street rev-b treasury))
       (try! (transformer .street fee-b .rewards))
-      (try! (transformer WELSH amount-a-net tx-sender))
+      (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin amount-a-net tx-sender))
       (try! (contract-call? .rewards update-rewards-b fee-b))
       (var-set reserve-a res-a-new)
       (var-set reserve-b res-b-new)

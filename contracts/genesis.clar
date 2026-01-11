@@ -61,9 +61,6 @@
 
 (use-trait sip-010 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.sip-010-trait)
 
-;; welshcorgicoin - use .welshcorgicoin for local devnet
-(define-constant WELSH .welshcorgicoin)
-
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u1000))
 (define-constant ERR_NOT_CONTRACT_OWNER (err u1001))
@@ -121,7 +118,7 @@
     (begin
         (asserts! (is-eq (var-get contribute-active) true) ERR_NOT_ACTIVE_FUND)
         (asserts! (> amount u0) ERR_ZERO_AMOUNT)
-        (try! (contract-call? WELSH transfer amount tx-sender .genesis none))
+        (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount tx-sender .genesis none))
         (var-set total-contribution new-total)
         (map-set balances { address: tx-sender } {
             balance: new-balance,
@@ -147,12 +144,12 @@
 ;; #[allow(unchecked_data)]
 (define-public (withdrawal)
     (let (
-        (balance (unwrap-panic (contract-call? WELSH get-balance .genesis)))
+        (balance (unwrap-panic (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin get-balance .genesis)))
     )
         (begin
             (asserts! (> balance u0) ERR_ZERO_AMOUNT)
             (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_NOT_CONTRACT_OWNER)
-            (try! (transformer WELSH balance CONTRACT_OWNER))
+            (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin balance CONTRACT_OWNER))
             (ok balance)
         )
     )

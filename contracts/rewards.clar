@@ -61,9 +61,6 @@
 
 (use-trait sip-010 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard.sip-010-trait)
 
-;; welshcorgicoin - use .welshcorgicoin for local devnet
-(define-constant WELSH .welshcorgicoin)
-
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u800))
 (define-constant ERR_NOT_CONTRACT_OWNER (err u801))
@@ -121,7 +118,7 @@
   )
     (begin
       (if (> claimed-a u0)
-        (try! (transformer WELSH claimed-a tx-sender))
+        (try! (transformer 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin claimed-a tx-sender))
         true
       )
       (if (> claimed-b u0)
@@ -156,7 +153,7 @@
 
 (define-public (cleanup-rewards)
   (let (
-    (actual-a (unwrap-panic (contract-call? WELSH get-balance .rewards)))
+    (actual-a (unwrap-panic (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin get-balance .rewards)))
     (actual-b (unwrap-panic (contract-call? .street get-balance .rewards)))
     (distributed-a (var-get total-distributed-a))
     (distributed-b (var-get total-distributed-b))
@@ -199,7 +196,7 @@
     (begin
       (if (> amount-a u0)
       (begin
-        (try! (contract-call? WELSH transfer amount-a tx-sender .rewards none))
+        (try! (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin transfer amount-a tx-sender .rewards none))
         (try! (as-contract (update-rewards-a amount-a)))
       )
         true
@@ -710,7 +707,7 @@
     (ok {
       global-index-a: (var-get global-index-a),
       global-index-b: (var-get global-index-b),
-      rewards-a: (unwrap-panic (contract-call? .welshcorgicoin get-balance .rewards)),
+      rewards-a: (unwrap-panic (contract-call? 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin get-balance .rewards)),
       rewards-b: (unwrap-panic (contract-call? .street get-balance .rewards)),
     })
 )

@@ -2,14 +2,14 @@
 name = 'welsh-street'
 description = ''
 authors = []
-telemetry = true
+telemetry = false
 cache_dir = './.cache'
 
 [[project.requirements]]
 contract_id = 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard'
 
-[contracts.welshcorgicoin]
-path = 'contracts/welshcorgicoin.clar'
+[contracts.comptroller]
+path = 'contracts/comptroller.clar'
 clarity_version = 3
 epoch = '3.1'
 
@@ -38,11 +38,6 @@ path = 'contracts/genesis.clar'
 clarity_version = 3
 epoch = '3.1'
 
-[contracts.comptroller]
-path = 'contracts/comptroller.clar'
-clarity_version = 3
-epoch = '3.1'
-
 [repl.analysis]
 passes = [
     'check_checker',
@@ -59,4 +54,4 @@ callee_filter = false
 
 [repl.remote_data]
 enabled = true
-api_url = 'https://api.testnet.hiro.so'
+api_url = 'https://api.hiro.so'
