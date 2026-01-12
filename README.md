@@ -16,14 +16,14 @@ The contracts form an integrated DeFi ecosystem where:
 - **Contract:** `controller.clar`
 - Utility contract to transfer CREDIT between STX Accounts
 - Manages the reward system adjustment and unclaimed reward tracking
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xe242b6a6881f4fa5dd869574f7af3ccf58ae59117fe8d12fcbefa719519ccc4f?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x7709d36dabb9139b022fb181f544bd5d4e3218a2ec2306e473af78649b791a02?chain=testnet)
 
 ### Credit
 - **Contract:** `credit.clar`
 - **LP Tokens**: Manages liquidity provider (LP) token issuance and tracking
 - CREDIT tokens represent proportional ownership of liquidity pools
 - Handles minting, burning, and balance management for LP positions
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x4eae5c536f2b70242a1bcdd0961e2da7489a42f6d961a37608053c3233ca30ea?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x12c8b4e2b75d7a688119ca4f2ae13bedf057d0dcf9c16a8f1971b0de86422999?chain=testnet)
 
 ### Exchange
 
@@ -32,7 +32,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Supports liquidity provision, removal with anti-whale provisions, and token swaps
 - Implements slippage protection and fee collection (0.5% per side)
 - Initial liquidity ratio: ~1 WELSH : 100 STREET
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xa60ea83c52558ce01f89e69296cc7e69b145391b57b8a2925fc64332fc809ba6?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x7c2b7ae9fa54d4d0618ffcba95a38e83939591fb17c383c825783c475ee986c9?chain=testnet)
 
 ### Rewards
 
@@ -41,7 +41,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Tracks reward global indices and accumulates rewards per share for fair distribution
 - Supports claiming of both WELSH and STREET token rewards
 - Handles pending rewards when no LP tokens exist
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x9e02677acede98cfabf4d829a9d14c3ddcbfd08c9cde7df6aa1f6ab1f20a6a4d?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x718378868dc939eec9dee056619175278e5829cad7e1eb8b339026e86714ed5f?chain=testnet)
 
 ### Street
 
@@ -49,7 +49,7 @@ The contracts form an integrated DeFi ecosystem where:
 - **STREET Token**: Secondary fungible token (10B total supply)
 - Features emission-based minting with epochs and community mint cap (4B)
 - Automatic emissions every block interval for rewards distribution
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xcced49a9d91002944e9a904d88310c65b18d56066137688a82773652700f5714?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x2d372fd7853b51ebfc2ed6374c61187b28e5c807af148a387222c42c01fd5bc7?chain=testnet)
 
 ### Welshcorgicoin
 
@@ -68,7 +68,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Seed round to raise funds for the initial liquidity pool
 - 1,000,000,000 (10% of total supply) $STREET tokens distributed to participants
 - Initial liquidity burned by deployer over time to insure fair distribution of initial liquidity
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xede718555757891c9aab46ca65af62ff714c355f5cb114335f08b0e254089e30?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xf3566805dd4ff8303e05e4c76d10b4ef86692b4ba18369d9a897b4e340b351df?chain=testnet)
 
 ## Key Features
 
