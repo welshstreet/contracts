@@ -16,8 +16,8 @@ Deploy Welsh Street DEX contracts to **testnet** while referencing the **existin
 **Solution**: Set all contracts to use `epoch = 'latest'` in Clarinet.toml
 
 ```toml
-[contracts.comptroller]
-path = 'contracts/comptroller.clar'
+[contracts.controller]
+path = 'contracts/controller.clar'
 clarity_version = 3
 epoch = 'latest'
 

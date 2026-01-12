@@ -97,9 +97,9 @@ plan:
             path: contracts/rewards.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: comptroller
+            contract-name: controller
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/comptroller.clar
+            path: contracts/controller.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: exchange

@@ -38,10 +38,10 @@ plan:
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
-            contract-name: comptroller
+            contract-name: controller
             expected-sender: ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD
             cost: 553551
-            path: contracts/comptroller.clar
+            path: contracts/controller.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
