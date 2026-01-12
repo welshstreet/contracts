@@ -78,7 +78,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (set-token-uri (value (string-utf8 256)))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)

@@ -135,7 +135,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (donate-rewards (amount-a uint) (amount-b uint))
     (begin
       (if (> amount-a u0)
@@ -159,7 +158,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-burn-rewards (user principal) (burn-amount uint))
   (let (
     (balance (unwrap-panic (contract-call? .credit get-balance user)))
@@ -186,23 +184,21 @@
           (unclaimed-b (if (> earned-b debt-b) (- earned-b debt-b) u0))
           (forfeit-a (/ (* unclaimed-a burn-amount) balance))
           (forfeit-b (/ (* unclaimed-b burn-amount) balance))
-          (redist-a (if (> other-lp u0)
+          (redistributed-a (if (> other-lp u0)
                         (/ (* forfeit-a PRECISION) other-lp)
                         u0))
-          (redist-b (if (> other-lp u0)
+          (redistributed-b (if (> other-lp u0)
                         (/ (* forfeit-b PRECISION) other-lp)
                         u0))
         )
           (begin
             (if (> forfeit-a u0)
               (begin
-                (var-set global-index-a (+ global-a redist-a))
-                (var-set total-distributed-a (+ (var-get total-distributed-a) forfeit-a)))
+                (var-set global-index-a (+ global-a redistributed-a)))
               true)
             (if (> forfeit-b u0)
               (begin
-                (var-set global-index-b (+ global-b redist-b))
-                (var-set total-distributed-b (+ (var-get total-distributed-b) forfeit-b)))
+                (var-set global-index-b (+ global-b redistributed-b)))
               true)
             (map-delete user-rewards { account: user })
             (let (
@@ -237,7 +233,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-emission-rewards)
   (let (
       (current-epoch (unwrap-panic (contract-call? .street get-current-epoch)))
@@ -264,7 +259,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-provide-rewards (user principal) (provide-amount uint))
   (let (
     (balance (unwrap-panic (contract-call? .credit get-balance user)))
@@ -320,7 +314,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-recipient-rewards (recipient principal) (transfer-amount uint))
   (let (
     (current-global-a (var-get global-index-a))
@@ -379,7 +372,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-remove-rewards (user principal) (remove-amount uint))
   (let (
     (balance (unwrap-panic (contract-call? .credit get-balance user)))
@@ -407,23 +399,21 @@
           (unclaimed-b (if (> earned-b debt-b) (- earned-b debt-b) u0))
           (forfeit-a (/ (* unclaimed-a remove-amount) old-balance))
           (forfeit-b (/ (* unclaimed-b remove-amount) old-balance))
-          (redist-a (if (> other-lp u0)
+          (redistributed-a (if (> other-lp u0)
                         (/ (* forfeit-a PRECISION) other-lp)
                         u0))
-          (redist-b (if (> other-lp u0)
+          (redistributed-b (if (> other-lp u0)
                         (/ (* forfeit-b PRECISION) other-lp)
                         u0))
         )
           (begin
             (if (> forfeit-a u0)
               (begin
-                (var-set global-index-a (+ global-a redist-a))
-                (var-set total-distributed-a (+ (var-get total-distributed-a) forfeit-a)))
+                (var-set global-index-a (+ global-a redistributed-a)))
               true)
             (if (> forfeit-b u0)
               (begin
-                (var-set global-index-b (+ global-b redist-b))
-                (var-set total-distributed-b (+ (var-get total-distributed-b) forfeit-b)))
+                (var-set global-index-b (+ global-b redistributed-b)))
               true)
             (let (
               (new-global-a (var-get global-index-a))
@@ -469,7 +459,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-rewards-a (amount uint))
   (let (
       (current-index (var-get global-index-a))
@@ -490,7 +479,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-rewards-b (amount uint))
   (let (
       (current-index (var-get global-index-b))
@@ -511,7 +499,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (update-sender-rewards (sender principal) (transfer-amount uint))
   (let (
     (balance (unwrap-panic (contract-call? .credit get-balance sender)))
@@ -538,23 +525,21 @@
         (unclaimed-b (if (> earned-b debt-b) (- earned-b debt-b) u0))
         (forfeit-a (/ (* unclaimed-a transfer-amount) old-balance))
         (forfeit-b (/ (* unclaimed-b transfer-amount) old-balance))
-        (redist-a (if (> other-lp u0)
+        (redistributed-a (if (> other-lp u0)
                       (/ (* forfeit-a PRECISION) other-lp)
                       u0))
-        (redist-b (if (> other-lp u0)
+        (redistributed-b (if (> other-lp u0)
                       (/ (* forfeit-b PRECISION) other-lp)
                       u0))
       )
         (begin
           (if (> forfeit-a u0)
             (begin
-              (var-set global-index-a (+ global-a redist-a))
-              (var-set total-distributed-a (+ (var-get total-distributed-a) forfeit-a)))
+              (var-set global-index-a (+ global-a redistributed-a)))
             true)
           (if (> forfeit-b u0)
             (begin
-              (var-set global-index-b (+ global-b redist-b))
-              (var-set total-distributed-b (+ (var-get total-distributed-b) forfeit-b)))
+              (var-set global-index-b (+ global-b redistributed-b)))
             true)
           (map-delete user-rewards { account: sender })
           (let (
@@ -587,7 +572,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (transformer
     (token <sip-010>)
     (amount uint)

@@ -40,7 +40,6 @@
 (define-data-var treasury-address principal (var-get contract-owner))
 (define-data-var treasury-locked bool false)
 
-;; #[allow(unchecked_data)]
 (define-public (burn-liquidity (amount-lp uint))
   (let (
     (total-supply-lp (unwrap-panic (contract-call? .credit get-total-supply)))
@@ -57,7 +56,6 @@
   ))
 )
 
-;; #[allow(unchecked_data)]
 (define-public (lock-liquidity (amount-a uint))
   (let (
     (lock-a (var-get locked-a))
@@ -94,7 +92,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (provide-initial-liquidity (amount-a uint) (amount-b uint))
   (let (
     (res-a (var-get reserve-a))
@@ -135,7 +132,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (provide-liquidity (amount-a uint))
   (let (
     (lock-a (var-get locked-a))
@@ -175,7 +171,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (remove-liquidity (amount-lp uint))
   (let (
     (res-a (var-get reserve-a))
@@ -214,7 +209,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (swap-a-b (amount-a uint))
   (let (
     (res-a (var-get reserve-a))
@@ -260,7 +254,6 @@
     )
   )
 
-;; #[allow(unchecked_data)]
 (define-public (swap-b-a (amount-b uint))
   (let (
     (res-a (var-get reserve-a))
@@ -315,7 +308,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (set-exchange-fee (amount uint))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
@@ -326,7 +318,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (set-exchange-rev (amount uint))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
@@ -337,7 +328,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (set-exchange-tax (amount uint))
   (begin
     (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
@@ -348,7 +338,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (set-treasury-address (new-treasury principal))
   (begin
     (asserts! (is-eq (var-get treasury-address) tx-sender) ERR_NOT_TREASURY)
@@ -375,7 +364,6 @@
   )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (transformer
     (token <sip-010>)
     (amount uint)

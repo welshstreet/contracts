@@ -50,7 +50,6 @@
     )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (contribute (amount uint))
     (let (
         (current-total (var-get total-contribution))
@@ -76,7 +75,6 @@
     )
 )
 
-;; #[allow(unchecked_data)]
 (define-public (transformer
     (token <sip-010>)
     (amount uint)
@@ -85,7 +83,6 @@
     (as-contract (contract-call? token transfer amount tx-sender recipient none))
 )
 
-;; #[allow(unchecked_data)]
 (define-public (withdrawal)
     (let (
         (balance (unwrap-panic (contract-call? WELSH_CONTRACT get-balance .genesis)))
@@ -97,14 +94,6 @@
             (ok balance)
         )
     )
-)
-
-;; custom read-only
-(define-read-only (get-blocks)
-    (ok {
-        stacks-block: stacks-block-height,
-        bitcoin-block: burn-block-height
-    })
 )
 
 (define-public (set-claim-active)
@@ -135,6 +124,14 @@
         )
         (ok (var-get contribute-active))
     )
+)
+
+;; custom read-only
+(define-read-only (get-blocks)
+    (ok {
+        stacks-block: stacks-block-height,
+        bitcoin-block: burn-block-height
+    })
 )
 
 (define-read-only (get-claim-active)
