@@ -25,7 +25,7 @@
       (asserts! (> amount u0) ERR_ZERO_AMOUNT)
       (asserts! (is-eq contract-caller .exchange) ERR_NOT_AUTHORIZED)
       (try! (ft-burn? credit amount tx-sender))
-      (ok {burned: amount})
+      (ok true)
     )
 )
 
@@ -34,7 +34,7 @@
       (asserts! (> amount u0) ERR_ZERO_AMOUNT)
       (asserts! (is-eq contract-caller .exchange) ERR_NOT_AUTHORIZED)
       (try! (ft-mint? credit amount tx-sender))
-      (ok {minted: amount})
+      (ok true)
     )
 )
 

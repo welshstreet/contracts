@@ -25,10 +25,8 @@ export default defineConfig({
     exclude: ['**/.archive/**'],
     environment: "clarinet", // use vitest-environment-clarinet
     pool: "forks",
-    poolOptions: {
-      threads: { singleThread: true },
-      forks: { singleFork: true },
-    },
+    // Conservative settings for Clarinet compatibility
+    maxWorkers: 1,
     setupFiles: [
       vitestSetupFilePath,
       // custom setup files can be added here
@@ -40,4 +38,9 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    deps: {
+      external: ['@stacks/clarinet-sdk']
+    }
+  }
 });
