@@ -38,42 +38,42 @@ plan:
         - contract-publish:
             contract-name: credit
             expected-sender: ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J
-            cost: 26690
+            cost: 562749
             path: contracts/credit.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: street
             expected-sender: ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J
-            cost: 47970
+            cost: 563763
             path: contracts/street.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: rewards
             expected-sender: ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J
-            cost: 242090
+            cost: 573198
             path: contracts/rewards.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: controller
             expected-sender: ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J
-            cost: 14500
+            cost: 562140
             path: contracts/controller.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: exchange
             expected-sender: ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J
-            cost: 142290
+            cost: 568328
             path: contracts/exchange.clar
             anchor-block-only: true
             clarity-version: 3
         - contract-publish:
             contract-name: genesis
             expected-sender: ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J
-            cost: 43210
+            cost: 563560
             path: contracts/genesis.clar
             anchor-block-only: true
             clarity-version: 3
