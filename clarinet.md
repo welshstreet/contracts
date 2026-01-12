@@ -81,7 +81,7 @@ The error shows Clarinet's dependency resolution system has limitations with ext
 ```toml
 # Clarinet.toml - Only includes trait requirement, no external contract references
 [[project.requirements]]
-contract_id = 'ST1NXBK3K5YYMD6FD41MVNP3JS1GABZ8TRVX023PT.sip-010-trait-ft-standard'
+contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
 ```
 
 ```clarity
