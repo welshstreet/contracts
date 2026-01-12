@@ -12,8 +12,8 @@ The contracts form an integrated DeFi ecosystem where:
 
 ## Core Contracts
 
-### Comptroller
-- **Contract:** `comtroller.clar`
+### Controller
+- **Contract:** `controller.clar`
 - Utility contract to transfer CREDIT between STX Accounts
 - Manages the reward system adjustment and unclaimed reward tracking
 - **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xe242b6a6881f4fa5dd869574f7af3ccf58ae59117fe8d12fcbefa719519ccc4f?chain=testnet)

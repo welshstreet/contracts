@@ -11,6 +11,7 @@ history.txt
 chainhooks/
 chainhook*
 templates/
+deployments/
 
 Mainnet.toml
 Testnet.toml
