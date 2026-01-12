@@ -8,7 +8,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Users provide WELSH/STREET liquidity and receive CREDIT LP tokens
 - Trading fees and STREET emissions accumulate in the rewards contract
 - LP token holders can claim proportional rewards at any time
-- The system maintains token reserves and reward distributions automatically
 
 ## Core Contracts
 
