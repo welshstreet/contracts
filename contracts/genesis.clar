@@ -3,12 +3,12 @@
 (use-trait sip-010 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
 ;; welshcorgicoin
-(define-constant WELSH_CONTRACT 'ST3Q0826K15YSHP5GTFJ3CW347JQRM0E1FENT6XWD.welshcorgicoin)
+(define-constant WELSH_CONTRACT 'ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J.welshcorgicoin)
 
 ;; errors
-(define-constant ERR_ZERO_AMOUNT (err u1000))
-(define-constant ERR_NOT_CONTRACT_OWNER (err u1001))
-(define-constant ERR_NOT_ACTIVE_FUND (err u1002))
+(define-constant ERR_ZERO_AMOUNT (err u500))
+(define-constant ERR_NOT_CONTRACT_OWNER (err u501))
+(define-constant ERR_NOT_ACTIVE_FUND (err u502))
 
 ;; metadata
 (define-constant CONTRACT_OWNER tx-sender)
@@ -21,8 +21,10 @@
 
 (define-map balances
     { address: principal }
-    { balance: uint,
-    claimed: uint }
+    { 
+      balance: uint,
+      claimed: uint
+    }
 )
 
 (define-public (claim)
@@ -43,8 +45,8 @@
             claimed: user-claim
             })
         (ok {
-            balance: user-balance,
-            claimed: user-claim
+            amount: user-claim,
+            balance: user-balance
         })
     )
     )
@@ -87,13 +89,21 @@
     (let (
         (balance (unwrap-panic (contract-call? WELSH_CONTRACT get-balance .genesis)))
     )
-        (begin
-            (asserts! (> balance u0) ERR_ZERO_AMOUNT)
-            (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_NOT_CONTRACT_OWNER)
-            (try! (transformer WELSH_CONTRACT  balance CONTRACT_OWNER))
-            (ok balance)
-        )
+    (begin
+        (asserts! (> balance u0) ERR_ZERO_AMOUNT)
+        (asserts! (is-eq tx-sender CONTRACT_OWNER) ERR_NOT_CONTRACT_OWNER)
+        (try! (transformer WELSH_CONTRACT balance CONTRACT_OWNER))
+        (ok balance)
     )
+    )
+)
+
+;; custom read-only
+(define-read-only (get-blocks)
+    (ok {
+        bitcoin-block: burn-block-height,
+        stacks-block: stacks-block-height
+    })
 )
 
 (define-public (set-claim-active)
@@ -124,14 +134,6 @@
         )
         (ok (var-get contribute-active))
     )
-)
-
-;; custom read-only
-(define-read-only (get-blocks)
-    (ok {
-        stacks-block: stacks-block-height,
-        bitcoin-block: burn-block-height
-    })
 )
 
 (define-read-only (get-claim-active)
