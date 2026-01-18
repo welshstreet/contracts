@@ -1,7 +1,7 @@
 [project]
-name = 'contracts'
+name = 'welsh-street'
 description = ''
-authors = []
+authors = ['enjoywithouthey']
 telemetry = false
 cache_dir = './.cache'
 
@@ -40,6 +40,7 @@ epoch = 'latest'
 path = 'contracts/street.clar'
 clarity_version = 3
 epoch = 'latest'
+
 [repl.analysis]
 passes = ['call_checker']
 
