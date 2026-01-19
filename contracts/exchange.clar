@@ -16,7 +16,7 @@
 (define-constant ERR_INSUFFICIENT_AVAILABLE_LIQUIDITY (err u707))
 (define-constant ERR_INVALID_AMOUNT (err u787))
 
-;; metadata
+;; constants
 (define-constant BASIS u10000)
 (define-constant DECIMALS u1000000)
 (define-constant MAX_FEE u200)

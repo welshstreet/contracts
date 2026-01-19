@@ -11,7 +11,7 @@
 (define-constant ERR_NOT_AUTHORIZED (err u603))
 (define-constant ERR_INVALID_PRINCIPAL (err u604))
 
-;; metadata
+;; constants
 (define-constant TOKEN_DECIMALS u6)
 (define-constant TOKEN_NAME "Street Credit")
 (define-constant TOKEN_SYMBOL "CREDIT")

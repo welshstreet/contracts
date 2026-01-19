@@ -12,7 +12,7 @@
 (define-constant ERR_NOT_AUTHORIZED (err u803))
 (define-constant ERR_INVALID_PRINCIPAL (err u804))
 
-;; metadata
+;; constants
 (define-constant PRECISION u1000000000)
 (define-constant EMISSION_AMOUNT u10000000000)
 

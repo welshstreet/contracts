@@ -10,7 +10,7 @@
 (define-constant ERR_NOT_CONTRACT_OWNER (err u501))
 (define-constant ERR_NOT_ACTIVE_FUND (err u502))
 
-;; metadata
+;; constants
 (define-constant CONTRACT_OWNER tx-sender)
 (define-constant TOTAL_STREET u1000000000000000)
 

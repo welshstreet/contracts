@@ -15,7 +15,7 @@
 (define-constant ERR_INVALID_PRINCIPAL (err u907))
 (define-constant ERR_KILL_SWITCH_FLIPPED (err u911))
 
-;; metadata
+;; constants
 (define-constant EMISSION_AMOUNT u10000000000)
 (define-constant EMISSION_INTERVAL u1)
 (define-constant MINT_CAP u5000000000000000)
