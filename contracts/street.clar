@@ -30,7 +30,7 @@
 (define-data-var kill-switch bool false)
 (define-data-var last-mint-block uint u0)
 (define-data-var street-minted uint u0)
-(define-data-var token-uri (optional (string-utf8 256)) (some u"https://gateway.lighthouse.storage/ipfs/bafkreihore32ofrwm27vbeunjv5dgjdoexzpvbqu4rwt6dspn6aji4fmgy"))
+(define-data-var token-uri (optional (string-utf8 256)) (some u"https://gateway.lighthouse.storage/ipfs/bafkreifp4aqbjtzrbqype3ai4gkolhdi6nr4ad44tdsoitogc3vqh47iju"))
 
 (define-public (emission-mint)
   (let (
