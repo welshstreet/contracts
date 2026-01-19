@@ -3,7 +3,7 @@
 (use-trait sip-010 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard.sip-010-trait)
 
 ;; welshcorgicoin
-(define-constant WELSH_CONTRACT 'ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J.welshcorgicoin)
+(define-constant WELSH_CONTRACT 'SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token)
 
 ;; errors
 (define-constant ERR_ZERO_AMOUNT (err u800))
@@ -563,7 +563,7 @@
 ;; custom read only
 (define-read-only (get-cleanup-rewards)
   (let (
-    (actual-a (unwrap-panic (contract-call? 'ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J.welshcorgicoin get-balance .rewards)))
+    (actual-a (unwrap-panic (contract-call? 'SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token get-balance .rewards)))
     (actual-b (unwrap-panic (contract-call? .street get-balance .rewards)))
     (claimed-a (var-get total-claimed-a))
     (claimed-b (var-get total-claimed-b))
@@ -607,7 +607,7 @@
     (ok {
       global-index-a: (var-get global-index-a),
       global-index-b: (var-get global-index-b),
-      rewards-a: (unwrap-panic (contract-call? 'ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J.welshcorgicoin get-balance .rewards)),
+      rewards-a: (unwrap-panic (contract-call? 'SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token get-balance .rewards)),
       rewards-b: (unwrap-panic (contract-call? .street get-balance .rewards)),
     })
 )

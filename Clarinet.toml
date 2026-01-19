@@ -1,7 +1,7 @@
 [project]
 name = 'welsh-street'
 description = ''
-authors = ['enjoywithouthey']
+authors = []
 telemetry = false
 cache_dir = './.cache'
 
@@ -9,7 +9,7 @@ cache_dir = './.cache'
 contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
 
 [[project.requirements]]
-contract_id = 'ST3HV3C3H5CDKB06J8PCXJJKGJ83VKF16BDWXSW3J.welshcorgicoin'
+contract_id = 'SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token'
 
 [contracts.controller]
 path = 'contracts/controller.clar'
@@ -53,5 +53,5 @@ trusted_caller = false
 callee_filter = false
 
 [repl.remote_data]
-enabled = false
+enabled = true
 api_url = 'https://api.hiro.so'
