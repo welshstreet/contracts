@@ -18,7 +18,7 @@
 
 ;; variables
 (define-data-var contract-owner principal tx-sender)
-(define-data-var token-uri (optional (string-utf8 256)) (some u"https://gateway.lighthouse.storage/ipfs/bafkreiglyrjoywkfb3bh4pr7wewn2nohofwx7wq5p5xyszfosgnsgkhfz4"))
+(define-data-var token-uri (optional (string-utf8 256)) (some u"https://gateway.lighthouse.storage/ipfs/bafkreihcjdmmkzs4bugrhehgrxfr4veuobidgzx2fbfhcgwapov7ff6mby"))
 
 (define-public (burn (amount uint))
     (begin
