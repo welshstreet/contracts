@@ -77,14 +77,6 @@
     )
 )
 
-(define-public (transformer
-    (token <sip-010>)
-    (amount uint)
-    (recipient principal)
-    )
-    (as-contract (contract-call? token transfer amount tx-sender recipient none))
-)
-
 (define-public (withdrawal)
     (let (
         (balance (unwrap-panic (contract-call? WELSH_CONTRACT get-balance .genesis)))
@@ -96,6 +88,14 @@
         (ok balance)
     )
     )
+)
+
+(define-private (transformer
+    (token <sip-010>)
+    (amount uint)
+    (recipient principal)
+    )
+    (as-contract (contract-call? token transfer amount tx-sender recipient none))
 )
 
 ;; custom read-only
