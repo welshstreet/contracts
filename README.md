@@ -31,7 +31,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Implements SIP-010 fungible token standard
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0x4bd86c3929599dfbd09a963e131a3a3f7bb894d00fdd9023d021b1408522b770?chain=testnet)
-    - [Mainnet](#)
 
 ### emission-controller
 
@@ -42,7 +41,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Automatically routes emissions to the rewards contract
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0x7ba045e99a36d6c9cbf7a87c8e8e1b39ad7940cd721bbb838bfd55b3609ae97d?chain=testnet)
-    - [Mainnet](#)
 
 ### street-controller
 
@@ -53,7 +51,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Enforces mint cap (21,000 NFTs) and per-user limits (2 NFTs)
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0x0eb58ec2f441bd98421c8ba4c5c0ce4926986d4702736f414808b6101b35f189?chain=testnet)
-    - [Mainnet](#)
 
 ### street-market
 
@@ -64,7 +61,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Features locked liquidity tracking and withdrawal tax (1%)
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0x82f21946bfde3e05ef2998fe97c3cf9255953e9ccc481288f54eceb45825fc4a?chain=testnet)
-    - [Mainnet](#)
 
 ### street-nft
 
@@ -75,7 +71,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Non-fungible token representing participation in STREET distribution
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0x9c427633ba6a8eb96f0c79fd15607ce087e40ee8cf9015e83bd190f1bae572ef?chain=testnet)
-    - [Mainnet](#)
 
 ### street-rewards
 
@@ -86,7 +81,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Handles cleanup of dust amounts and donation mechanisms
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0x96a36e466a5c781868c3bc087668942b3d3e4bc3d8fb065b209657f112b66a5c?chain=testnet)
-    - [Mainnet](#)
 
 ### street-token
 
@@ -97,7 +91,6 @@ The contracts form an integrated DeFi ecosystem where:
 - Implements SIP-010 fungible token standard
 - **Contract Links:** 
     - [Testnet](https://explorer.hiro.so/txid/0xbf979b1ba3938888fac622a2792e1def682ddbf8cfda717a6d61bd63f5f3085b?chain=testnet)
-    - [Mainnet](#)
 
 ### welsh-faucet
 
