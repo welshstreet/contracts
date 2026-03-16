@@ -1,24 +1,12 @@
 [project]
-name = "street"
-description = ""
+name = "Welsh Street"
+description = "Web2 had Wall Street. Web3 has Welsh Street"
 authors = []
 telemetry = false
 cache_dir = "./.cache"
 
 [[project.requirements]]
 contract_id = "SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard"
-
-# [contracts.counter]
-# path = "contracts/counter.clar"
-# epoch = "latest"
-
-# Check-checker settings:
-# trusted_sender: if true, inputs are trusted after tx_sender has been checked.
-# trusted_caller: if true, inputs are trusted after contract-caller has been checked.
-# callee_filter: if true, untrusted data may be passed into a private function without a
-# warning, if it gets checked inside. This check will also propagate up to the
-# caller.
-# More information: https://www.hiro.so/blog/new-safety-checks-in-clarinet
 
 # [repl.analysis]
 # passes = []
