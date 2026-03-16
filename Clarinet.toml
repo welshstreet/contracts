@@ -1,57 +1,80 @@
 [project]
-name = 'welsh-street'
-description = ''
+name = "street"
+description = ""
 authors = []
 telemetry = false
-cache_dir = './.cache'
+cache_dir = "./.cache"
 
 [[project.requirements]]
-contract_id = 'SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard'
+contract_id = "SP3FBR2AGK5H9QBDH3EEN6DF8EK8JY7RX8QJ5SVTE.sip-010-trait-ft-standard"
 
-[[project.requirements]]
-contract_id = 'SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token'
+# [contracts.counter]
+# path = "contracts/counter.clar"
+# epoch = "latest"
 
-[contracts.controller]
-path = 'contracts/controller.clar'
-clarity_version = 3
-epoch = 'latest'
+# Check-checker settings:
+# trusted_sender: if true, inputs are trusted after tx_sender has been checked.
+# trusted_caller: if true, inputs are trusted after contract-caller has been checked.
+# callee_filter: if true, untrusted data may be passed into a private function without a
+# warning, if it gets checked inside. This check will also propagate up to the
+# caller.
+# More information: https://www.hiro.so/blog/new-safety-checks-in-clarinet
 
-[contracts.credit]
-path = 'contracts/credit.clar'
-clarity_version = 3
-epoch = 'latest'
-
-[contracts.exchange]
-path = 'contracts/exchange.clar'
-clarity_version = 3
-epoch = 'latest'
-
-[contracts.genesis]
-path = 'contracts/genesis.clar'
-clarity_version = 3
-epoch = 'latest'
-
-[contracts.rewards]
-path = 'contracts/rewards.clar'
-clarity_version = 3
-epoch = 'latest'
-
-[contracts.street]
-path = 'contracts/street.clar'
-clarity_version = 3
-epoch = 'latest'
-
-[repl.analysis]
-passes = ['call_checker']
+# [repl.analysis]
+# passes = []
+# passes = ["check_checker"]
+# check_checker = { trusted_sender = true, trusted_caller = true, callee_filter = false, strict = false }
 
 [repl.analysis.lints]
 
-[repl.analysis.check_checker]
-strict = false
-trusted_sender = false
-trusted_caller = false
-callee_filter = false
+[contracts]
 
-[repl.remote_data]
-enabled = true
-api_url = 'https://api.hiro.so'
+[contracts.credit-controller]
+path = "contracts/credit-controller.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.credit-token]
+path = "contracts/credit-token.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.emission-controller]
+path = "contracts/emission-controller.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.street-controller]
+path = "contracts/street-controller.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.street-market]
+path = "contracts/street-market.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.street-nft]
+path = "contracts/street-nft.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.street-rewards]
+path = "contracts/street-rewards.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.street-token]
+path = "contracts/street-token.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.welsh-faucet]
+path = "contracts/welsh-faucet.clar"
+clarity_version = 4
+epoch = "latest"
+
+[contracts.welshcorgicoin]
+path = "contracts/welshcorgicoin.clar"
+clarity_version = 4
+epoch = "latest"
