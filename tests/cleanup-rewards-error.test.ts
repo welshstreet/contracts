@@ -27,7 +27,7 @@ describe("=== CLEANUP REWARDS ERROR TESTS ===", () => {
         );
 
         // Should fail with ERR_CLEANUP_INTERVAL
-        expect(result.result).toBeErr(Cl.uint(975));
+        expect(result.result).toBeErr(Cl.uint(974));
         
         if (disp) {
             console.log("✓ ERR_CLEANUP_INTERVAL triggered: Cannot cleanup before 144 blocks have passed");

@@ -36,10 +36,13 @@ export function setupUserDeployer(
     // When minting STREET, DONATE_WELSH_TO_MINT goes to rewards pool
     // index-increment = (amount * PRECISION) / total-lp
     // global-index-a = current-index + index-increment
-    let indexIncrementA = supplyCredit > 0 
-        ? Math.floor((DONATE_WELSH_TO_MINT * PRECISION) / supplyCredit)
-        : 0;
-    globalIndexA = globalIndexA + indexIncrementA;
+    // CRITICAL: Use BigInt to avoid precision loss when amount * PRECISION exceeds Number.MAX_SAFE_INTEGER
+    const PRECISION_BIG = BigInt(PRECISION);
+    const indexIncrementABig = supplyCredit > 0 
+        ? (BigInt(DONATE_WELSH_TO_MINT) * PRECISION_BIG) / BigInt(supplyCredit)
+        : 0n;
+    const globalIndexABig = BigInt(globalIndexA) + indexIncrementABig;
+    globalIndexA = Number(globalIndexABig);
     rewardsA = rewardsA + DONATE_WELSH_TO_MINT;
 
     getRewardPoolInfo(
@@ -59,7 +62,7 @@ export function setupUserDeployer(
         0,
         0, // indexA stays at 0 until deployer interacts with rewards again
         0,
-        Math.floor((deployerCredit * globalIndexA) / PRECISION), // unclaimed rewards
+        Number((BigInt(deployerCredit) * globalIndexABig) / PRECISION_BIG), // unclaimed rewards - use BigInt to avoid precision loss
         0,
         deployer,
         disp
@@ -95,7 +98,7 @@ export function setupUserDeployer(
                     debtB: 0,
                     indexA: 0,
                     indexB: 0,
-                    unclaimedA: Math.floor((deployerCredit * globalIndexA) / PRECISION),
+                    unclaimedA: Number((BigInt(deployerCredit) * globalIndexABig) / PRECISION_BIG),
                     unclaimedB: 0
                 }
             }

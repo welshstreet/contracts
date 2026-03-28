@@ -375,8 +375,8 @@ export function getCleanupRewards(
 }
 
 export function getRewardPoolInfo(
-    globalIndexAExpected: number,     // Expected return value
-    globalIndexBExpected: number,     // Expected return value
+    globalIndexAExpected: number,     // Expected return value (for assertion only)
+    globalIndexBExpected: number,     // Expected return value (for assertion only)
     rewardsAExpected: number,         // Expected return value
     rewardsBExpected: number,         // Expected return value
     sender: any,                      // Transaction sender
@@ -384,22 +384,28 @@ export function getRewardPoolInfo(
 ) {
     const test = simnet.callReadOnlyFn("street-rewards", "get-reward-pool-info", [], sender);
     const info = (test.result as any).value.value;
-    const receivedGlobalIndexA = Number(info['global-index-a'].value);
-    const receivedGlobalIndexB = Number(info['global-index-b'].value);
-    const receivedRewardsA = Number(info['rewards-a'].value);
-    const receivedRewardsB = Number(info['rewards-b'].value);
+    
+    // Extract BigInt values directly from contract (true precision)
+    const globalIndexA = info['global-index-a'].value as bigint;
+    const globalIndexB = info['global-index-b'].value as bigint;
+    const rewardsA = Number(info['rewards-a'].value);
+    const rewardsB = Number(info['rewards-b'].value);
+    
+    // Convert to Number only for validation (symmetric conversion for assertions)
+    const receivedGlobalIndexA = Number(globalIndexA);
+    const receivedGlobalIndexB = Number(globalIndexB);
 
     // Validate all expected values
     expect(receivedGlobalIndexA).toEqual(globalIndexAExpected);
     expect(receivedGlobalIndexB).toEqual(globalIndexBExpected);
-    expect(receivedRewardsA).toEqual(rewardsAExpected);
-    expect(receivedRewardsB).toEqual(rewardsBExpected);
+    expect(rewardsA).toEqual(rewardsAExpected);
+    expect(rewardsB).toEqual(rewardsBExpected);
 
     const allMatch = (
         receivedGlobalIndexA === globalIndexAExpected &&
         receivedGlobalIndexB === globalIndexBExpected &&
-        receivedRewardsA === rewardsAExpected &&
-        receivedRewardsB === rewardsBExpected
+        rewardsA === rewardsAExpected &&
+        rewardsB === rewardsBExpected
     );
 
     if (disp) {
@@ -412,15 +418,57 @@ export function getRewardPoolInfo(
         console.log(`Reward Pool Info:`);
         console.log(`  global-index-a: ${receivedGlobalIndexA}`);
         console.log(`  global-index-b: ${receivedGlobalIndexB}`);
-        console.log(`  rewards-a: ${receivedRewardsA}`);
-        console.log(`  rewards-b: ${receivedRewardsB}`);
+        console.log(`  rewards-a: ${rewardsA}`);
+        console.log(`  rewards-b: ${rewardsB}`);
     }
 
     return {
-        globalIndexA: receivedGlobalIndexA,
-        globalIndexB: receivedGlobalIndexB,
-        rewardsA: receivedRewardsA,
-        rewardsB: receivedRewardsB
+        globalIndexA,  // Return as BigInt for precise calculations
+        globalIndexB,  // Return as BigInt for precise calculations
+        rewardsA,
+        rewardsB
+    };
+}
+
+export function fetchRewardUserInfo(
+    user: any,                        // Contract input - user principal
+    sender: any,                      // Transaction sender
+    disp: boolean = false             // Optional with default false
+) {
+    const test = simnet.callReadOnlyFn("street-rewards", "get-reward-user-info", [Cl.principal(user)], sender);
+    const info = (test.result as any).value.value;
+    
+    // Extract BigInt values directly from contract (true precision)
+    const indexA = info['index-a'].value as bigint;
+    const indexB = info['index-b'].value as bigint;
+    const balance = Number(info['balance'].value);
+    const block = Number(info['block'].value);
+    const debtA = Number(info['debt-a'].value);
+    const debtB = Number(info['debt-b'].value);
+    const unclaimedA = Number(info['unclaimed-a'].value);
+    const unclaimedB = Number(info['unclaimed-b'].value);
+
+    if (disp) {
+        console.log(`📋 fetchRewardUserInfo: ${user}`);
+        console.log(`  balance: ${balance}`);
+        console.log(`  block: ${block}`);
+        console.log(`  debt-a: ${debtA}`);
+        console.log(`  debt-b: ${debtB}`);
+        console.log(`  index-a: ${Number(indexA)}`);
+        console.log(`  index-b: ${Number(indexB)}`);
+        console.log(`  unclaimed-a: ${unclaimedA}`);
+        console.log(`  unclaimed-b: ${unclaimedB}`);
+    }
+
+    return {
+        balance,
+        block,
+        debtA,
+        debtB,
+        indexA,  // Return BigInt for precision
+        indexB,  // Return BigInt for precision
+        unclaimedA,
+        unclaimedB,
     };
 }
 
@@ -439,14 +487,20 @@ export function getRewardUserInfo(
 ) {
     const test = simnet.callReadOnlyFn("street-rewards", "get-reward-user-info", [Cl.principal(user)], sender);
     const info = (test.result as any).value.value;
+    
+    // Extract BigInt values directly from contract (true precision)
+    const indexA = info['index-a'].value as bigint;
+    const indexB = info['index-b'].value as bigint;
     const receivedBalanceLp = Number(info['balance'].value);
     const receivedBlockLp = Number(info['block'].value);
     const receivedDebtA = Number(info['debt-a'].value);
     const receivedDebtB = Number(info['debt-b'].value);
-    const receivedIndexA = Number(info['index-a'].value);
-    const receivedIndexB = Number(info['index-b'].value);
     const receivedUnclaimedA = Number(info['unclaimed-a'].value);
     const receivedUnclaimedB = Number(info['unclaimed-b'].value);
+    
+    // Convert to Number only for validation (symmetric conversion for assertions)
+    const receivedIndexA = Number(indexA);
+    const receivedIndexB = Number(indexB);
 
     // Validate all expected values
     expect(receivedBalanceLp).toEqual(balanceExpected);
@@ -490,8 +544,8 @@ export function getRewardUserInfo(
         block: receivedBlockLp,
         debtA: receivedDebtA,
         debtB: receivedDebtB,
-        indexA: receivedIndexA,
-        indexB: receivedIndexB,
+        indexA,  // Return BigInt for precision
+        indexB,  // Return BigInt for precision
         unclaimedA: receivedUnclaimedA,
         unclaimedB: receivedUnclaimedB,
     };

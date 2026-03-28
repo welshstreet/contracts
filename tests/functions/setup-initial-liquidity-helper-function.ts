@@ -2,9 +2,11 @@ import { FEE, INITIAL_PROVIDE_WELSH, INITIAL_PROVIDE_STREET, INITIAL_MINT_WELSH,
 import { getBalance } from "./shared-read-only-helper-functions";
 import { initialLiquidity } from "./street-market-helper-functions";
 
+const accounts = simnet.getAccounts();
+const deployer = accounts.get("deployer")!;
+
 export function setupInitialLiquidity(disp: boolean = false) {
-    const accounts = simnet.getAccounts();
-    const deployer = accounts.get("deployer")!;
+    
     // STEP 1: Mint STREET tokens to deployer (fresh test state) happens automatically in genesis block
     getBalance(INITIAL_MINT_WELSH, 'welshcorgicoin', deployer, deployer, disp);
     getBalance(INITIAL_MINT_STREET, 'street-token', deployer, deployer, disp);

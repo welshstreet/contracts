@@ -6,10 +6,10 @@
 (define-constant ERR_ZERO_AMOUNT (err u971))
 (define-constant ERR_NOT_CONTRACT_OWNER (err u972))
 (define-constant ERR_NOT_AUTHORIZED (err u973))
-(define-constant ERR_CLEANUP_INTERVAL (err u975))
+(define-constant ERR_CLEANUP_INTERVAL (err u974))
  
 ;; constants
-(define-constant PRECISION u1000000000)
+(define-constant PRECISION u1000000000000000000)
 (define-constant CLEANUP_INTERVAL u144)
 
 ;; variables
@@ -191,7 +191,6 @@
             (begin
               (var-set global-index-b (+ global-b redistributed-b)))
             true)
-          (map-delete users { account: user })
           (let (
             (new-global-a (var-get global-index-a))
             (new-global-b (var-get global-index-b))
@@ -214,7 +213,7 @@
                   index-a: preserve-idx-a,
                   index-b: preserve-idx-b
                 })
-              true)
+              (map-delete users { account: user }))
             )
           (ok true)
         )
@@ -272,41 +271,21 @@
           (earned-b (/ (* old-balance (- global-b index-b)) PRECISION))
           (unclaimed-a (if (> earned-a debt-a) (- earned-a debt-a) u0))
           (unclaimed-b (if (> earned-b debt-b) (- earned-b debt-b) u0))
+          (preserve-idx-a (if (> unclaimed-a u0)
+                            (- global-a (/ (* unclaimed-a PRECISION) balance))
+                            global-a))
+          (preserve-idx-b (if (> unclaimed-b u0)
+                            (- global-b (/ (* unclaimed-b PRECISION) balance))
+                            global-b))
         )
-          (if (is-eq contract-caller .street-market)
-            (let (
-              (new-earned-a (/ (* balance (- global-a index-a)) PRECISION))
-              (new-earned-b (/ (* balance (- global-b index-b)) PRECISION))
-              (preserve-debt-a (if (> new-earned-a unclaimed-a) (- new-earned-a unclaimed-a) u0))
-              (preserve-debt-b (if (> new-earned-b unclaimed-b) (- new-earned-b unclaimed-b) u0))
-            )
-              (map-set users { account: user } {
-                balance: balance,
-                block: block,
-                debt-a: preserve-debt-a,
-                debt-b: preserve-debt-b,
-                index-a: index-a,
-                index-b: index-b
-              })
-            )
-            (let (
-              (preserve-idx-a (if (> unclaimed-a u0)
-                                (- global-a (/ (* unclaimed-a PRECISION) balance))
-                                global-a))
-              (preserve-idx-b (if (> unclaimed-b u0)
-                                (- global-b (/ (* unclaimed-b PRECISION) balance))
-                                global-b))
-            )
-              (map-set users { account: user } {
-                balance: balance,
-                block: block,
-                debt-a: u0,
-                debt-b: u0,
-                index-a: preserve-idx-a,
-                index-b: preserve-idx-b
-              })
-            )
-          )
+          (map-set users { account: user } {
+            balance: balance,
+            block: block,
+            debt-a: u0,
+            debt-b: u0,
+            index-a: preserve-idx-a,
+            index-b: preserve-idx-b
+          })
         )
         (map-set users { account: user } {
           balance: balance,
@@ -394,8 +373,8 @@
     (ok {
       global-index-a: (var-get global-index-a),
       global-index-b: (var-get global-index-b),
-  rewards-a: (unwrap-panic (contract-call? .welshcorgicoin get-balance .street-rewards)),
-  rewards-b: (unwrap-panic (contract-call? .street-token get-balance .street-rewards)),
+      rewards-a: (unwrap-panic (contract-call? .welshcorgicoin get-balance .street-rewards)),
+      rewards-b: (unwrap-panic (contract-call? .street-token get-balance .street-rewards)),
     })
 )
 

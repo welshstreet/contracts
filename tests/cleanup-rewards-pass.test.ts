@@ -28,17 +28,26 @@ describe("=== CLEANUP REWARDS TESTS ===", () => {
         
         cleanupRewards(DONATE_WELSH, DONATE_STREET, deployer, disp)
 
-        // Calculate expected global indexes after cleanup
-        let expectedGlobalIndexA = globalIndexA + Math.floor((DONATE_WELSH * PRECISION) / totalLpSupply);
-        let expectedGlobalIndexB = globalIndexB + Math.floor((DONATE_STREET * PRECISION) / totalLpSupply);
+        // Calculate expected global indexes after cleanup using BigInt for precision
+        const PRECISION_BIG = BigInt(PRECISION);
+        const totalLpSupplyBig = BigInt(totalLpSupply);
+        const globalIndexABig = BigInt(globalIndexA);
+        const globalIndexBBig = BigInt(globalIndexB);
+        
+        const cleanupIndexIncreaseABig = (BigInt(DONATE_WELSH) * PRECISION_BIG) / totalLpSupplyBig;
+        const cleanupIndexIncreaseBBig = (BigInt(DONATE_STREET) * PRECISION_BIG) / totalLpSupplyBig;
+        
+        const expectedGlobalIndexABig = globalIndexABig + cleanupIndexIncreaseABig;
+        const expectedGlobalIndexBBig = globalIndexBBig + cleanupIndexIncreaseBBig;
         
         // Update rewards to include the cleanup amounts
         rewardsA += DONATE_WELSH;
         rewardsB += DONATE_STREET;
 
-        getRewardPoolInfo(
-            expectedGlobalIndexA,
-            expectedGlobalIndexB,
+        // Verify global indexes and extract true BigInt values from contract
+        const poolInfo = getRewardPoolInfo(
+            Number(expectedGlobalIndexABig),
+            Number(expectedGlobalIndexBBig),
             rewardsA,
             rewardsB,
             deployer,

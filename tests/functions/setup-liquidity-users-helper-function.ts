@@ -64,6 +64,8 @@ export function setupLiquidityUsers(disp: boolean = false) {
     // Calculate redistribution from deployer's burn
     // IMPORTANT: Deployer doesn't forfeit ALL unclaimed - only proportional to LP burned!
     // Contract logic: forfeit-a = (unclaimed-a * amount-burned) / old-balance
+    // CRITICAL: Use BigInt to avoid precision loss when forfeit * PRECISION exceeds Number.MAX_SAFE_INTEGER
+    const PRECISION_BIG = BigInt(PRECISION);
     const oldDeployerBalance = userData.deployer.balances.credit + DEPLOYER_BURN_AMOUNT;
     const deployerForfeitA = Math.floor((deployerUnclaimedA * DEPLOYER_BURN_AMOUNT) / oldDeployerBalance);
     const deployerForfeitB = Math.floor((deployerUnclaimedB * DEPLOYER_BURN_AMOUNT) / oldDeployerBalance);
@@ -74,23 +76,28 @@ export function setupLiquidityUsers(disp: boolean = false) {
     
     // After burn, remaining LP holders are wallet1 and wallet2
     const totalLpAfterDeployerBurn = userData.wallet1.balances.credit + userData.wallet2.balances.credit;
-    const deployerRedistributionA = Math.floor((deployerForfeitA * PRECISION) / totalLpAfterDeployerBurn);
-    const deployerRedistributionB = Math.floor((deployerForfeitB * PRECISION) / totalLpAfterDeployerBurn);
+    const deployerRedistributionABig = (BigInt(deployerForfeitA) * PRECISION_BIG) / BigInt(totalLpAfterDeployerBurn);
+    const deployerRedistributionBBig = (BigInt(deployerForfeitB) * PRECISION_BIG) / BigInt(totalLpAfterDeployerBurn);
     
     // Update global indices after deployer burn (add redistribution increment)
-    rewardData.globalIndexA = rewardData.globalIndexA + deployerRedistributionA;
-    rewardData.globalIndexB = rewardData.globalIndexB + deployerRedistributionB;
+    const globalIndexABig = BigInt(rewardData.globalIndexA) + deployerRedistributionABig;
+    const globalIndexBBig = BigInt(rewardData.globalIndexB) + deployerRedistributionBBig;
+    rewardData.globalIndexA = Number(globalIndexABig);
+    rewardData.globalIndexB = Number(globalIndexBBig);
     
     // STEP 7: Update user reward info after deployer burn
     // Deployer's user index is adjusted to preserve their remaining unclaimed
     // Contract logic: preserve-idx-a = new-global-a - (preserve-a * PRECISION / remaining-balance)
     // This ensures: unclaimed = (balance * (global - index)) / PRECISION = preserve-a
-    const deployerIndexA = userData.deployer.balances.credit > 0 && deployerPreserveA > 0
-        ? rewardData.globalIndexA - Math.floor((deployerPreserveA * PRECISION) / userData.deployer.balances.credit)
-        : rewardData.globalIndexA;
-    const deployerIndexB = userData.deployer.balances.credit > 0 && deployerPreserveB > 0
-        ? rewardData.globalIndexB - Math.floor((deployerPreserveB * PRECISION) / userData.deployer.balances.credit)
-        : rewardData.globalIndexB;
+    // CRITICAL: Use BigInt to avoid precision loss when preserve * PRECISION exceeds Number.MAX_SAFE_INTEGER
+    const deployerIndexABig = userData.deployer.balances.credit > 0 && deployerPreserveA > 0
+        ? globalIndexABig - (BigInt(deployerPreserveA) * PRECISION_BIG) / BigInt(userData.deployer.balances.credit)
+        : globalIndexABig;
+    const deployerIndexBBig = userData.deployer.balances.credit > 0 && deployerPreserveB > 0
+        ? globalIndexBBig - (BigInt(deployerPreserveB) * PRECISION_BIG) / BigInt(userData.deployer.balances.credit)
+        : globalIndexBBig;
+    const deployerIndexA = Number(deployerIndexABig);
+    const deployerIndexB = Number(deployerIndexBBig);
     
     // Update deployer's rewardUserInfo in userData
     userData.deployer.rewardUserInfo.balance = userData.deployer.balances.credit;

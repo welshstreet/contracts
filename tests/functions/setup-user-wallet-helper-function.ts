@@ -56,10 +56,13 @@ export function setupUserWallet(
     // When minting STREET, DONATE_WELSH_TO_MINT goes to rewards pool
     // index-increment = (amount * PRECISION) / total-lp
     // global-index-a = current-index + index-increment
-    let indexIncrementA = supplyCredit > 0 
-        ? Math.floor((DONATE_WELSH_TO_MINT * PRECISION) / supplyCredit)
-        : 0;
-    globalIndexA = globalIndexA + indexIncrementA;  // Reassign
+    // CRITICAL: Use BigInt to avoid precision loss when amount * PRECISION exceeds Number.MAX_SAFE_INTEGER
+    const PRECISION_BIG = BigInt(PRECISION);
+    const indexIncrementABig = supplyCredit > 0 
+        ? (BigInt(DONATE_WELSH_TO_MINT) * PRECISION_BIG) / BigInt(supplyCredit)
+        : 0n;
+    const globalIndexABig = BigInt(globalIndexA) + indexIncrementABig;
+    globalIndexA = Number(globalIndexABig);
     rewardsA = rewardsA + DONATE_WELSH_TO_MINT;      // Reassign
 
     // Update block to current height after mint
@@ -120,7 +123,7 @@ export function setupUserWallet(
     );
 
     let indexAExpected = globalIndexA;
-    let unclaimedAExpected = Math.floor((userCredit * (globalIndexA - 0)) / PRECISION);
+    let unclaimedAExpected = Number((BigInt(userCredit) * (globalIndexABig - 0n)) / PRECISION_BIG); // Use BigInt to avoid precision loss
 
     getRewardUserInfo(
         wallet,

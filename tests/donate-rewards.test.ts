@@ -49,30 +49,50 @@ describe("=== DONATE REWARDS TESTS ===", () => {
         // STEP 4: Deployer donates rewards to rewards contract
         donateRewards(DONATE_WELSH, DONATE_STREET, deployer, disp)
 
-        // STEP 5: Update values after donation
+        // STEP 5: Calculate expected values after donation using BigInt
+        const PRECISION_BIG = BigInt(PRECISION);
         const totalLpSupply = supplyData.credit;
-        const donationIndexIncreaseA = Math.floor((DONATE_WELSH * PRECISION) / totalLpSupply);
-        const donationIndexIncreaseB = Math.floor((DONATE_STREET * PRECISION) / totalLpSupply);
-        globalIndexA += donationIndexIncreaseA;
-        globalIndexB += donationIndexIncreaseB;
+        const totalLpSupplyBig = BigInt(totalLpSupply);
+        
+        // Calculate index increments using BigInt to preserve precision
+        const donationIndexIncreaseABig = (BigInt(DONATE_WELSH) * PRECISION_BIG) / totalLpSupplyBig;
+        const donationIndexIncreaseBBig = (BigInt(DONATE_STREET) * PRECISION_BIG) / totalLpSupplyBig;
+        
+        // Calculate expected global indices using BigInt
+        const expectedGlobalIndexABig = BigInt(globalIndexA) + donationIndexIncreaseABig;
+        const expectedGlobalIndexBBig = BigInt(globalIndexB) + donationIndexIncreaseBBig;
+        
+        // Update reward balances (these are safe as Number - no precision loss)
         rewardsA += DONATE_WELSH;
         rewardsB += DONATE_STREET;
 
-        // STEP 6: Verify global indexes updated correctly
-        getRewardPoolInfo(
-            globalIndexA,
-            globalIndexB,
+        // STEP 6: Verify global indexes updated correctly and extract true BigInt values from contract
+        const poolInfo = getRewardPoolInfo(
+            Number(expectedGlobalIndexABig),  // Expected value for validation
+            Number(expectedGlobalIndexBBig),  // Expected value for validation
             rewardsA,  // Updated rewards after donation
             rewardsB,  // Updated rewards after donation
             deployer,
             disp
-        )
+        );
+        
+        // Extract true BigInt values from contract (for precise calculations)
+        const globalIndexABig = poolInfo.globalIndexA;
+        const globalIndexBBig = poolInfo.globalIndexB;
+        
+        // Update Number versions for storage (compatibility)
+        globalIndexA = Number(globalIndexABig);
+        globalIndexB = Number(globalIndexBBig);
 
         // STEP 7: Check deployer's unclaimed rewards after donation  
         // CRITICAL TEST: Deployer should be able to claim the donated rewards
         // Calculate deployer's share based on their LP holdings and the donation increase
-        deployerUnclaimedA = deployerUnclaimedA + Math.floor((deployerLpBalance * donationIndexIncreaseA) / PRECISION);
-        deployerUnclaimedB = Math.floor((deployerLpBalance * donationIndexIncreaseB) / PRECISION);
+        const deployerLpBalanceBig = BigInt(deployerLpBalance);
+        const deployerUnclaimedAIncrease = Number((deployerLpBalanceBig * donationIndexIncreaseABig) / PRECISION_BIG);
+        const deployerUnclaimedBIncrease = Number((deployerLpBalanceBig * donationIndexIncreaseBBig) / PRECISION_BIG);
+        
+        deployerUnclaimedA = deployerUnclaimedA + deployerUnclaimedAIncrease;
+        deployerUnclaimedB = deployerUnclaimedBIncrease;
         
         if (disp) {
             console.log(`Expected unclaimed A: ${deployerUnclaimedA} (original + donation share)`);

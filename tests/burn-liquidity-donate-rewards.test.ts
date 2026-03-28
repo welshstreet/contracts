@@ -57,21 +57,25 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
         
         burnLiquidity(deployerLpBalance, deployer, disp);
         
-        // Update state after deployer burn
+        // Update state after deployer burn using BigInt
+        const PRECISION_BIG = BigInt(PRECISION);
         totalLpSupply = wallet1LpBalance + wallet2LpBalance;
-        const deployerRedistributionA = Math.floor((deployerUnclaimedA * PRECISION) / totalLpSupply);
-        const deployerRedistributionB = Math.floor((deployerUnclaimedB * PRECISION) / totalLpSupply);
+        const totalLpSupplyBig = BigInt(totalLpSupply);
+        const deployerRedistributionABig = (BigInt(deployerUnclaimedA) * PRECISION_BIG) / totalLpSupplyBig;
+        const deployerRedistributionBBig = (BigInt(deployerUnclaimedB) * PRECISION_BIG) / totalLpSupplyBig;
         
-        globalIndexA = globalIndexA + deployerRedistributionA;
-        globalIndexB = globalIndexB + deployerRedistributionB;
+        let globalIndexABig = BigInt(globalIndexA) + deployerRedistributionABig;
+        let globalIndexBBig = BigInt(globalIndexB) + deployerRedistributionBBig;
+        globalIndexA = Number(globalIndexABig);
+        globalIndexB = Number(globalIndexBBig);
         deployerLpBalance = 0;
         
         if (disp) {
             console.log("=== STEP 2 COMPLETE: DEPLOYER BURNED LP ===");
             console.log(`Deployer unclaimed A: ${deployerUnclaimedA}`);
             console.log(`Deployer unclaimed B: ${deployerUnclaimedB}`);
-            console.log(`Redistribution A: ${deployerRedistributionA}`);
-            console.log(`Redistribution B: ${deployerRedistributionB}`);
+            console.log(`Redistribution A: ${Number(deployerRedistributionABig)}`);
+            console.log(`Redistribution B: ${Number(deployerRedistributionBBig)}`);
             console.log(`New Global Index A: ${globalIndexA}`);
             console.log(`New Global Index B: ${globalIndexB}`);
             console.log(`Remaining LP: ${totalLpSupply}`);
@@ -80,9 +84,13 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
         // STEP 3: Donate rewards - only wallet1 and wallet2 should benefit
         donateRewards(DONATE_WELSH, DONATE_STREET, deployer, disp);
         
-        // Update state after donation
-        globalIndexA = globalIndexA + Math.floor((DONATE_WELSH * PRECISION) / totalLpSupply);
-        globalIndexB = globalIndexB + Math.floor((DONATE_STREET * PRECISION) / totalLpSupply);
+        // Update state after donation using BigInt
+        const donationIndexIncreaseABig = (BigInt(DONATE_WELSH) * PRECISION_BIG) / totalLpSupplyBig;
+        const donationIndexIncreaseBBig = (BigInt(DONATE_STREET) * PRECISION_BIG) / totalLpSupplyBig;
+        globalIndexABig = globalIndexABig + donationIndexIncreaseABig;
+        globalIndexBBig = globalIndexBBig + donationIndexIncreaseBBig;
+        globalIndexA = Number(globalIndexABig);
+        globalIndexB = Number(globalIndexBBig);
         rewardsA = rewardsA + DONATE_WELSH;
         rewardsB = rewardsB + DONATE_STREET;
         
@@ -96,8 +104,11 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
         
         // STEP 4: Verify wallet1's unclaimed rewards after donation
         // wallet1's unclaimed = (balance * (globalIndex - userIndex)) / PRECISION - debt
-        let wallet1UnclaimedA = Math.floor((wallet1LpBalance * (globalIndexA - wallet1UserIndexA)) / PRECISION) - wallet1DebtA;
-        let wallet1UnclaimedB = Math.floor((wallet1LpBalance * (globalIndexB - wallet1UserIndexB)) / PRECISION) - wallet1DebtB;
+        const wallet1LpBalanceBig = BigInt(wallet1LpBalance);
+        const wallet1UserIndexABig = BigInt(wallet1UserIndexA);
+        const wallet1UserIndexBBig = BigInt(wallet1UserIndexB);
+        let wallet1UnclaimedA = Number((wallet1LpBalanceBig * (globalIndexABig - wallet1UserIndexABig)) / PRECISION_BIG) - wallet1DebtA;
+        let wallet1UnclaimedB = Number((wallet1LpBalanceBig * (globalIndexBBig - wallet1UserIndexBBig)) / PRECISION_BIG) - wallet1DebtB;
         
         getRewardUserInfo(
             wallet1,
@@ -124,8 +135,11 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
         
 
         // STEP 5: Verify wallet2's unclaimed rewards after donation
-        let wallet2UnclaimedA = Math.floor((wallet2LpBalance * (globalIndexA - wallet2UserIndexA)) / PRECISION) - wallet2DebtA;
-        let wallet2UnclaimedB = Math.floor((wallet2LpBalance * (globalIndexB - wallet2UserIndexB)) / PRECISION) - wallet2DebtB;
+        const wallet2LpBalanceBig = BigInt(wallet2LpBalance);
+        const wallet2UserIndexABig = BigInt(wallet2UserIndexA);
+        const wallet2UserIndexBBig = BigInt(wallet2UserIndexB);
+        let wallet2UnclaimedA = Number((wallet2LpBalanceBig * (globalIndexABig - wallet2UserIndexABig)) / PRECISION_BIG) - wallet2DebtA;
+        let wallet2UnclaimedB = Number((wallet2LpBalanceBig * (globalIndexBBig - wallet2UserIndexBBig)) / PRECISION_BIG) - wallet2DebtB;
         
         getRewardUserInfo(
             accounts.get("wallet_2")!,
@@ -150,30 +164,43 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
         
         // STEP 6: wallet1 burns 50% of their liquidity
         const wallet1BurnAmount = wallet1LpBalance / 2;
+        const wallet1BurnAmountBig = BigInt(wallet1BurnAmount);
         
-        // Calculate how much of wallet1's unclaimed gets forfeited vs preserved
-        const forfeitA = Math.floor((wallet1UnclaimedA * wallet1BurnAmount) / wallet1LpBalance);
-        const forfeitB = Math.floor((wallet1UnclaimedB * wallet1BurnAmount) / wallet1LpBalance);
-        const preserveA = wallet1UnclaimedA - forfeitA;
-        const preserveB = wallet1UnclaimedB - forfeitB;
+        // Calculate how much of wallet1's unclaimed gets forfeited vs preserved using BigInt
+        const wallet1UnclaimedABig = BigInt(wallet1UnclaimedA);
+        const wallet1UnclaimedBBig = BigInt(wallet1UnclaimedB);
+        const forfeitABig = (wallet1UnclaimedABig * wallet1BurnAmountBig) / wallet1LpBalanceBig;
+        const forfeitBBig = (wallet1UnclaimedBBig * wallet1BurnAmountBig) / wallet1LpBalanceBig;
+        const preserveABig = wallet1UnclaimedABig - forfeitABig;
+        const preserveBBig = wallet1UnclaimedBBig - forfeitBBig;
+        const forfeitA = Number(forfeitABig);
+        const forfeitB = Number(forfeitBBig);
+        const preserveA = Number(preserveABig);
+        const preserveB = Number(preserveBBig);
         
         burnLiquidity(wallet1BurnAmount, wallet1, disp);
         
-        // Update state after wallet1 burn
+        // Update state after wallet1 burn using BigInt
         const remainingLpAfterWallet1Burn = wallet2LpBalance; // Only wallet2 remains with full LP
-        const redistributionToWallet2A = Math.floor((forfeitA * PRECISION) / remainingLpAfterWallet1Burn);
-        const redistributionToWallet2B = Math.floor((forfeitB * PRECISION) / remainingLpAfterWallet1Burn);
+        const remainingLpAfterWallet1BurnBig = BigInt(remainingLpAfterWallet1Burn);
+        const redistributionToWallet2ABig = (forfeitABig * PRECISION_BIG) / remainingLpAfterWallet1BurnBig;
+        const redistributionToWallet2BBig = (forfeitBBig * PRECISION_BIG) / remainingLpAfterWallet1BurnBig;
         
-        globalIndexA = globalIndexA + redistributionToWallet2A;
-        globalIndexB = globalIndexB + redistributionToWallet2B;
+        globalIndexABig = globalIndexABig + redistributionToWallet2ABig;
+        globalIndexBBig = globalIndexBBig + redistributionToWallet2BBig;
+        globalIndexA = Number(globalIndexABig);
+        globalIndexB = Number(globalIndexBBig);
         
         // Update wallet1 state after burn
         wallet1LpBalance = wallet1LpBalance / 2; // Burned 50%
+        const wallet1LpBalanceAfterBurnBig = BigInt(wallet1LpBalance);
         totalLpSupply = wallet1LpBalance + wallet2LpBalance;
         
-        // wallet1's user index is set to preserve their remaining rewards
-        wallet1UserIndexA = globalIndexA - Math.floor((preserveA * PRECISION) / wallet1LpBalance);
-        wallet1UserIndexB = globalIndexB - Math.floor((preserveB * PRECISION) / wallet1LpBalance);
+        // wallet1's user index is set to preserve their remaining rewards using BigInt
+        const wallet1UserIndexAAfterBurnBig = globalIndexABig - (preserveABig * PRECISION_BIG) / wallet1LpBalanceAfterBurnBig;
+        const wallet1UserIndexBAfterBurnBig = globalIndexBBig - (preserveBBig * PRECISION_BIG) / wallet1LpBalanceAfterBurnBig;
+        wallet1UserIndexA = Number(wallet1UserIndexAAfterBurnBig);
+        wallet1UserIndexB = Number(wallet1UserIndexBAfterBurnBig);
         wallet1DebtA = 0;
         wallet1DebtB = 0;
         wallet1UnclaimedA = preserveA;
@@ -184,8 +211,8 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
             console.log(`Wallet1 Burn Amount: ${wallet1BurnAmount}`);
             console.log(`Forfeit A: ${forfeitA}, Forfeit B: ${forfeitB}`);
             console.log(`Preserve A: ${preserveA}, Preserve B: ${preserveB}`);
-            console.log(`Redistribution to wallet2 A: ${redistributionToWallet2A}`);
-            console.log(`Redistribution to wallet2 B: ${redistributionToWallet2B}`);
+            console.log(`Redistribution to wallet2 A: ${Number(redistributionToWallet2ABig)}`);
+            console.log(`Redistribution to wallet2 B: ${Number(redistributionToWallet2BBig)}`);
             console.log(`New Global Index A: ${globalIndexA}`);
             console.log(`New Global Index B: ${globalIndexB}`);
             console.log(`New Wallet1 LP Balance: ${wallet1LpBalance}`);
@@ -214,8 +241,8 @@ describe("=== BURN LIQUIDITY DONATE TESTS ===", () => {
         }
         
         // STEP 8: Verify wallet2 received the redistributed rewards
-        wallet2UnclaimedA = Math.floor((wallet2LpBalance * (globalIndexA - wallet2UserIndexA)) / PRECISION) - wallet2DebtA;
-        wallet2UnclaimedB = Math.floor((wallet2LpBalance * (globalIndexB - wallet2UserIndexB)) / PRECISION) - wallet2DebtB;
+        wallet2UnclaimedA = Number((wallet2LpBalanceBig * (globalIndexABig - wallet2UserIndexABig)) / PRECISION_BIG) - wallet2DebtA;
+        wallet2UnclaimedB = Number((wallet2LpBalanceBig * (globalIndexBBig - wallet2UserIndexBBig)) / PRECISION_BIG) - wallet2DebtB;
         
         getRewardUserInfo(
             accounts.get("wallet_2")!,

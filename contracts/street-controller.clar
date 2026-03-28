@@ -21,8 +21,8 @@
 
 (define-public (mint)
   (let (
-  (user-welsh (unwrap-panic (contract-call? .welshcorgicoin get-balance contract-caller)))
-  (total-lp (unwrap-panic (contract-call? .credit-token get-total-supply)))
+      (user-welsh (unwrap-panic (contract-call? .welshcorgicoin get-balance contract-caller)))
+      (total-lp (unwrap-panic (contract-call? .credit-token get-total-supply)))
       (count (+ (var-get mint-count) u1))
       (is-milestone (is-eq (mod count u21) u0))
       (mint-amount (if is-milestone MINT_BONUS MINT_STREET))

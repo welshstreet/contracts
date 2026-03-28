@@ -53,15 +53,15 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
         let wallet1Balance = wallet1Data.rewardUserInfo.balance;
         let wallet1UnclaimedA = wallet1Data.rewardUserInfo.unclaimedA;
         let wallet1UnclaimedB = wallet1Data.rewardUserInfo.unclaimedB;
-        let wallet1IndexA = wallet1Data.rewardUserInfo.indexA;
-        let wallet1IndexB = wallet1Data.rewardUserInfo.indexB;
+        let wallet1IndexA = BigInt(wallet1Data.rewardUserInfo.indexA);
+        let wallet1IndexB = BigInt(wallet1Data.rewardUserInfo.indexB);
         let wallet1DebtA = wallet1Data.rewardUserInfo.debtA;
         let wallet1DebtB = wallet1Data.rewardUserInfo.debtB;
         let wallet1Block = wallet1Data.rewardUserInfo.block;
         
         // Extract global reward pool info from rewardData
-        let globalIndexA = rewardData.globalIndexA;
-        let globalIndexB = rewardData.globalIndexB;
+        let globalIndexA = BigInt(rewardData.globalIndexA);
+        let globalIndexB = BigInt(rewardData.globalIndexB);
         
         if (disp) {
             console.log("=== STEP 1 COMPLETE: Initial Setup ===");
@@ -209,8 +209,8 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
         wallet1Balance = 0;
         wallet1DebtA = 0;
         wallet1DebtB = 0;
-        wallet1IndexA = 0;
-        wallet1IndexB = 0;
+        wallet1IndexA = 0n;
+        wallet1IndexB = 0n;
         wallet1UnclaimedA = 0;
         wallet1UnclaimedB = 0;
 
@@ -376,8 +376,8 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
 
         // get-reward-pool-info returns (ok (tuple ...)), so unwrap `.value.value`
         let globalAfter = (poolInfoAfterProvide.result as any).value.value;
-        let expectedIndexAAfter = Number(globalAfter["global-index-a"].value);
-        let expectedIndexBAfter = Number(globalAfter["global-index-b"].value);
+        let expectedIndexAAfter = BigInt(globalAfter["global-index-a"].value);
+        let expectedIndexBAfter = BigInt(globalAfter["global-index-b"].value);
 
         // Update local and in-memory rewardUserInfo to match this expected "new user" state
         wallet1Balance = userData.wallet1.balances.credit;
@@ -385,6 +385,8 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
         wallet1DebtB = 0;
         wallet1IndexA = expectedIndexAAfter;
         wallet1IndexB = expectedIndexBAfter;
+        globalIndexA = expectedIndexAAfter;
+        globalIndexB = expectedIndexBAfter;
         wallet1UnclaimedA = 0;
         wallet1UnclaimedB = 0;
 
@@ -463,7 +465,7 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
             ? (donateAmountABig * precisionBig) / totalLpAfterProvideBig
             : 0n;
 
-        let expectedGlobalIndexAAfterDonate = globalIndexA + Number(indexIncrementBig);
+        let expectedGlobalIndexAAfterDonate = globalIndexA + indexIncrementBig;
 
         // Read updated reward pool info and verify the new global index A
         let poolInfoAfterDonate = simnet.callReadOnlyFn(
@@ -474,8 +476,8 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
         );
 
         let poolAfterDonate = (poolInfoAfterDonate.result as any).value.value;
-        let receivedGlobalIndexAAfterDonate = Number(poolAfterDonate["global-index-a"].value);
-        let receivedGlobalIndexBAfterDonate = Number(poolAfterDonate["global-index-b"].value);
+        let receivedGlobalIndexAAfterDonate = BigInt(poolAfterDonate["global-index-a"].value);
+        let receivedGlobalIndexBAfterDonate = BigInt(poolAfterDonate["global-index-b"].value);
 
         expect(receivedGlobalIndexAAfterDonate).toEqual(expectedGlobalIndexAAfterDonate);
         expect(receivedGlobalIndexBAfterDonate).toEqual(globalIndexB); // STREET side unchanged
@@ -483,8 +485,6 @@ describe("=== REMOVE LIQUIDITY REWARDS DEBUG TEST ===", () => {
         // Update our in-memory global reward data to match on-chain state
         globalIndexA = receivedGlobalIndexAAfterDonate;
         globalIndexB = receivedGlobalIndexBAfterDonate;
-        rewardData.globalIndexA = globalIndexA;
-        rewardData.globalIndexB = globalIndexB;
 
         // Compute wallet1's newly earned/unclaimed WELSH from this donation
         // earned = balance * donateAmountA / totalLpSupply (integer division)

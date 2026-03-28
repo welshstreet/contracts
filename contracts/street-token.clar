@@ -35,7 +35,7 @@
 
 (define-public (set-contract-owner (new-owner principal))
   (begin
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
+    (asserts! (is-eq contract-caller (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
     (var-set contract-owner new-owner)
     (ok true)
   )
@@ -43,7 +43,7 @@
 
 (define-public (set-token-uri (value (string-utf8 256)))
   (begin
-    (asserts! (is-eq tx-sender (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
+    (asserts! (is-eq contract-caller (var-get contract-owner)) ERR_NOT_CONTRACT_OWNER)
     (var-set token-uri (some value))
     (ok true)
   )

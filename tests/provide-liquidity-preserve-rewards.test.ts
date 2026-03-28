@@ -3,7 +3,7 @@ import { setupLiquidityUsers } from "./functions/setup-liquidity-users-helper-fu
 import { disp, PROVIDE_WELSH, DONATE_WELSH, DONATE_STREET, PRECISION } from "./vitestconfig"
 import { provideLiquidity } from "./functions/street-market-helper-functions";
 import { getBalance } from "./functions/shared-read-only-helper-functions";
-import { donateRewards, getRewardUserInfo } from "./functions/street-rewards-helper-functions";
+import { donateRewards, getRewardPoolInfo, getRewardUserInfo } from "./functions/street-rewards-helper-functions";
 
 const accounts = simnet.getAccounts();
 const deployer = accounts.get("deployer")!;
@@ -28,16 +28,55 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
         }
         
         donateRewards(DONATE_WELSH, DONATE_STREET, deployer, disp);
-        
         // STEP 3: Check wallet1's reward state BEFORE providing additional liquidity
         if (disp) {
             console.log("WALLET1 BEFORE ADDITIONAL LIQUIDITY:");
         }
         
-        // Use existing unclaimed rewards from setup data and add donation rewards
-        userData.wallet1.rewardUserInfo.unclaimedA += Math.floor((userData.wallet1.balances.credit * Math.floor((DONATE_WELSH * PRECISION) / supplyData.credit)) / PRECISION);
-        userData.wallet1.rewardUserInfo.unclaimedB += Math.floor((userData.wallet1.balances.credit * Math.floor((DONATE_STREET * PRECISION) / supplyData.credit)) / PRECISION);
+        // Calculate expected global indices after donation using BigInt (avoids precision loss)
+        // setupLiquidityUsers now uses BigInt internally, so rewardData has the best Number approximation
+        const PRECISION_BIG = BigInt(PRECISION);
+        const totalLpBig = BigInt(supplyData.credit);
         
+        // Calculate index increments from donation
+        const indexIncrementABig = (BigInt(DONATE_WELSH) * PRECISION_BIG) / totalLpBig;
+        const indexIncrementBBig = (BigInt(DONATE_STREET) * PRECISION_BIG) / totalLpBig;
+        
+        // Calculate expected global indices (keep as BigInt for precision)
+        const expectedGlobalABig = BigInt(rewardData.globalIndexA) + indexIncrementABig;
+        const expectedGlobalBBig = BigInt(rewardData.globalIndexB) + indexIncrementBBig;
+        
+        // Update rewardData with calculated values (stored as Number for compatibility)
+        rewardData.globalIndexA = Number(expectedGlobalABig);
+        rewardData.globalIndexB = Number(expectedGlobalBBig);
+        rewardData.rewardsA += DONATE_WELSH;
+        rewardData.rewardsB += DONATE_STREET;
+
+        // Verify our calculated values match the contract and get TRUE BigInt values back
+        const poolInfo = getRewardPoolInfo(
+            rewardData.globalIndexA,
+            rewardData.globalIndexB,
+            rewardData.rewardsA,
+            rewardData.rewardsB,
+            deployer,
+            disp
+        );
+        
+        // Extract the TRUE BigInt values from contract for precise calculations
+        const globalAAfterDonate = poolInfo.globalIndexA;
+        const globalBAfterDonate = poolInfo.globalIndexB;
+
+        // Compute wallet1's unclaimed using the integrated formula (matches contract exactly)
+        const w1BalanceBig = BigInt(userData.wallet1.balances.credit);
+        const w1IndexABig = BigInt(userData.wallet1.rewardUserInfo.indexA);
+        const w1IndexBBig = BigInt(userData.wallet1.rewardUserInfo.indexB);
+        const w1DebtABig = BigInt(userData.wallet1.rewardUserInfo.debtA);
+        const w1DebtBBig = BigInt(userData.wallet1.rewardUserInfo.debtB);
+        const earnedABig = w1BalanceBig * (globalAAfterDonate - w1IndexABig) / PRECISION_BIG;
+        const earnedBBig = w1BalanceBig * (globalBAfterDonate - w1IndexBBig) / PRECISION_BIG;
+        userData.wallet1.rewardUserInfo.unclaimedA = Number(earnedABig > w1DebtABig ? earnedABig - w1DebtABig : 0n);
+        userData.wallet1.rewardUserInfo.unclaimedB = Number(earnedBBig > w1DebtBBig ? earnedBBig - w1DebtBBig : 0n);
+
         getRewardUserInfo(
             wallet1,
             userData.wallet1.balances.credit,
@@ -51,14 +90,23 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
             wallet1,
             disp
         );
-
+        
+        // UPDATE userData with verified contract state after STEP 3
+        // Note: index-a stays at OLD value (20000000000000) because donation doesn't update user's stored index
+        // Only the computed unclaimed values have changed based on new global indices
+        userData.wallet1.rewardUserInfo.block = simnet.blockHeight;
+        // Keep indexA and indexB at their stored values from setup (donation doesn't write to user state)
+        // userData.wallet1.rewardUserInfo.indexA unchanged
+        // userData.wallet1.rewardUserInfo.indexB unchanged
+        // Unclaimed values are already set from calculations above
+        
         if (disp) {
             console.log("WALLET1 VALUES:");
             console.log(`LP tokens: ${userData.wallet1.balances.credit.toLocaleString()}`);
             console.log(`Unclaimed WELSH: ${userData.wallet1.rewardUserInfo.unclaimedA.toLocaleString()}`);
             console.log(`Unclaimed STREET: ${userData.wallet1.rewardUserInfo.unclaimedB.toLocaleString()}`);
         }
-        
+
         // STEP 4: wallet1 provides additional liquidity - demonstrates timing behavior
         if (disp) {
             console.log("PROVIDING ADDITIONAL LIQUIDITY:");
@@ -78,12 +126,23 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
         
         provideLiquidity(PROVIDE_WELSH, expectedAmountB, expectedMintedLp, wallet1, disp);
 
+        // Verify pool state after provide-liquidity (global indices unchanged - no new rewards distributed)
+        getRewardPoolInfo(
+            Number(globalAAfterDonate),
+            Number(globalBAfterDonate),
+            rewardData.rewardsA,  // Already includes donation from contract query
+            rewardData.rewardsB,  // Already includes donation from contract query
+            deployer,
+            disp
+        );
+
         // STEP 5: Analyze wallet1's reward state AFTER additional liquidity (CORRECT BEHAVIOR!)
         if (disp) {
             console.log("WALLET1 AFTER:");
         }
         
         // Update wallet1's LP balance with the newly minted LP
+        const oldBalance = userData.wallet1.balances.credit;
         userData.wallet1.balances.credit += expectedMintedLp;
         let newBalance = userData.wallet1.balances.credit;
         
@@ -91,30 +150,65 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
             console.log(`Expected NEW LP balance: ${newBalance.toLocaleString()}`);
         }
         
-        // Calculate new earned amounts with the NEW balance
-        // This is what the contract calculates: new-earned = (new-balance * (global-index - user-index)) / PRECISION
-        let globalIndexA = rewardData.globalIndexA + Math.floor((DONATE_WELSH * PRECISION) / supplyData.credit);
-        let globalIndexB = rewardData.globalIndexB + Math.floor((DONATE_STREET * PRECISION) / supplyData.credit);
+        // CRITICAL: The contract's increase-rewards calculates unclaimed using the OLD stored index
+        // from BEFORE provide-liquidity (stored value = 20000000000000 from setup, unchanged by donation)
+        const oldBalanceBig = BigInt(oldBalance);
+        const newBalanceBig = BigInt(newBalance);
+        const oldStoredIndexABig = BigInt(userData.wallet1.rewardUserInfo.indexA); // 20000000000000 from setup
+        const oldStoredIndexBBig = BigInt(userData.wallet1.rewardUserInfo.indexB); // 0 from setup
+        const oldDebtABig = BigInt(userData.wallet1.rewardUserInfo.debtA); // 0
+        const oldDebtBBig = BigInt(userData.wallet1.rewardUserInfo.debtB); // 0
         
-        let newEarnedA = Math.floor((newBalance * (globalIndexA - userData.wallet1.rewardUserInfo.indexA)) / PRECISION);
-        let newEarnedB = Math.floor((newBalance * (globalIndexB - userData.wallet1.rewardUserInfo.indexB)) / PRECISION);
+        if (disp) {
+            console.log("DEBUG STEP 5 CALCULATION:");
+            console.log(`  oldBalance: ${oldBalance}`);
+            console.log(`  newBalance: ${newBalance}`);
+            console.log(`  oldStoredIndexA: ${userData.wallet1.rewardUserInfo.indexA}`);
+            console.log(`  globalAAfterDonate: ${globalAAfterDonate}`);
+            console.log(`  PRECISION: ${PRECISION}`);
+        }
         
-        // The debt is set to preserve existing unclaimed rewards
-        // preserve-debt = if new-earned > unclaimed then (new-earned - unclaimed) else 0
-        userData.wallet1.rewardUserInfo.debtA = newEarnedA > userData.wallet1.rewardUserInfo.unclaimedA 
-            ? newEarnedA - userData.wallet1.rewardUserInfo.unclaimedA 
-            : 0;
-        userData.wallet1.rewardUserInfo.debtB = newEarnedB > userData.wallet1.rewardUserInfo.unclaimedB 
-            ? newEarnedB - userData.wallet1.rewardUserInfo.unclaimedB 
-            : 0;
-        
-        // User's index values stay unchanged during provide-liquidity (preservation mechanism)
-        // indexA and indexB remain at their previous values
+        // Contract calculates earned using OLD balance and OLD stored index (not the global from donation!)
+        const contractEarnedABig = oldBalanceBig * (globalAAfterDonate - oldStoredIndexABig) / PRECISION_BIG;
+        const contractEarnedBBig = oldBalanceBig * (globalBAfterDonate - oldStoredIndexBBig) / PRECISION_BIG;
+        const contractUnclaimedABig = contractEarnedABig > oldDebtABig ? contractEarnedABig - oldDebtABig : 0n;
+        const contractUnclaimedBBig = contractEarnedBBig > oldDebtBBig ? contractEarnedBBig - oldDebtBBig : 0n;
+
+        if (disp) {
+            console.log(`  contractEarnedA: ${contractEarnedABig}`);
+            console.log(`  contractUnclaimedA: ${contractUnclaimedABig}`);
+        }
+
+        // Method 2 (index adjustment): preserve unclaimed by adjusting index backward, zeroing debt
+        // preserve-idx = global - floor(unclaimed * PRECISION / new-balance)
+        const preserveIdxABig = contractUnclaimedABig > 0n
+            ? globalAAfterDonate - (contractUnclaimedABig * PRECISION_BIG) / newBalanceBig
+            : globalAAfterDonate;
+        const preserveIdxBBig = contractUnclaimedBBig > 0n
+            ? globalBAfterDonate - (contractUnclaimedBBig * PRECISION_BIG) / newBalanceBig
+            : globalBAfterDonate;
+
+        if (disp) {
+            console.log(`  preserveIdxA: ${preserveIdxABig}`);
+        }
+
+        userData.wallet1.rewardUserInfo.indexA = Number(preserveIdxABig);
+        userData.wallet1.rewardUserInfo.indexB = Number(preserveIdxBBig);
+
+        // Debt is zeroed with Method 2
+        userData.wallet1.rewardUserInfo.debtA = 0;
+        userData.wallet1.rewardUserInfo.debtB = 0;
+
+        // Recalculate expected unclaimed from the new index (matches contract exactly)
+        const recalcUnclaimedABig = newBalanceBig * (globalAAfterDonate - preserveIdxABig) / PRECISION_BIG;
+        const recalcUnclaimedBBig = newBalanceBig * (globalBAfterDonate - preserveIdxBBig) / PRECISION_BIG;
+        userData.wallet1.rewardUserInfo.unclaimedA = Number(recalcUnclaimedABig);
+        userData.wallet1.rewardUserInfo.unclaimedB = Number(recalcUnclaimedBBig);
         
         // Block number gets updated
         userData.wallet1.rewardUserInfo.block = simnet.blockHeight; // Updated to block of provide-liquidity transaction
         
-        // Check contract results - rewards should be preserved unchanged
+        // Check contract results - rewards should be preserved (±1 from truncation)
         getRewardUserInfo(
             wallet1,
             userData.wallet1.balances.credit,  // NEW LP balance (old + minted)
@@ -123,12 +217,12 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
             userData.wallet1.rewardUserInfo.debtB,
             userData.wallet1.rewardUserInfo.indexA,
             userData.wallet1.rewardUserInfo.indexB,
-            userData.wallet1.rewardUserInfo.unclaimedA,  // Preserved unchanged!
-            userData.wallet1.rewardUserInfo.unclaimedB,  // Preserved unchanged!
+            userData.wallet1.rewardUserInfo.unclaimedA,
+            userData.wallet1.rewardUserInfo.unclaimedB,
             wallet1,
             disp
         );
-
+        
         if (disp) {
             console.log("CALCULATION VERIFICATION:");
             console.log(`LP tokens: ${userData.wallet1.balances.credit.toLocaleString()} (increased)`);
@@ -136,14 +230,14 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
             console.log(`Unclaimed STREET: ${userData.wallet1.rewardUserInfo.unclaimedB.toLocaleString()} (preserved)`);
             console.log(`Block: ${userData.wallet1.rewardUserInfo.block} (updated)`);
         }
-        
+
         // STEP 6: Verify rewards contract balance for precision check
         if (disp) {
             console.log("REWARDS CONTRACT BALANCE VERIFICATION:");
         }
         
-        // Contract holds: setup rewardsA (30B) + donated WELSH (1B) = 31B total  
-        let expectedWelshBalance = rewardData.rewardsA + DONATE_WELSH;
+        // Contract holds: rewardData.rewardsA already includes the donation (updated in STEP 3)
+        let expectedWelshBalance = rewardData.rewardsA;
         
         getBalance(
             expectedWelshBalance,
@@ -155,8 +249,7 @@ describe("=== PROVIDE LIQUIDITY PRESERVE REWARDS TEST ===", () => {
         
         if (disp) {
             console.log(`Contract holds ${expectedWelshBalance.toLocaleString()} WELSH total`);
-            console.log(`  - ${rewardData.rewardsA.toLocaleString()} from setup`);
-            console.log(`  - ${DONATE_WELSH.toLocaleString()} from donation`);
+            console.log(`  - Includes all setup and donated rewards`);
             console.log("(This confirms rewards are properly managed and preserved)");
         }
     });
