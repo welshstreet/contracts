@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { setupLiquidityUsers } from "./functions/setup-liquidity-users-helper-function";
-import { getNftContractOwner, getNftOwner, getNftTokenUri, getNftBaseUri, getUserMintedTokens } from "./functions/street-nft-helper-functions";
+import { getNftContractOwner, getNftOwner, getNftTokenUri, getNftBaseUri, getUserMintedTokens, getLastTokenId } from "./functions/street-nft-helper-functions";
 import { disp, NFT_BASE_URI } from "./vitestconfig";
 
 const accounts = simnet.getAccounts();
@@ -58,26 +58,26 @@ describe("=== STREET NFT READ ONLY FUNCTIONS TESTS ===", () => {
         // STEP 1: Setup environment with multi-user liquidity state
         setupLiquidityUsers(disp);
 
-        // STEP 2: Check NFT #1 URI
-        const expectedUri1 = NFT_BASE_URI + "1.json";
-        const uri1 = getNftTokenUri(1, expectedUri1, disp);
-        expect(uri1).toEqual(expectedUri1);
+        // STEP 2: Check NFT URI template (all tokens return the same template with {id} placeholder)
+        // The contract follows NFT standard where clients replace {id} with the actual token ID
+        const expectedUriTemplate = NFT_BASE_URI + "{id}.json";
+        
+        // STEP 3: Verify URI template for token #1
+        const uri1 = getNftTokenUri(1, disp);
+        expect(uri1).toEqual(expectedUriTemplate);
 
-        // STEP 3: Check NFT #2 URI
-        const expectedUri2 = NFT_BASE_URI + "2.json";
-        const uri2 = getNftTokenUri(2, expectedUri2, disp);
-        expect(uri2).toEqual(expectedUri2);
+        // STEP 4: Verify URI template for token #2 (should be same template)
+        const uri2 = getNftTokenUri(2, disp);
+        expect(uri2).toEqual(expectedUriTemplate);
 
-        // STEP 4: Check NFT #3 URI
-        const expectedUri3 = NFT_BASE_URI + "3.json";
-        const uri3 = getNftTokenUri(3, expectedUri3, disp);
-        expect(uri3).toEqual(expectedUri3);
+        // STEP 5: Verify URI template for token #3 (should be same template)
+        const uri3 = getNftTokenUri(3, disp);
+        expect(uri3).toEqual(expectedUriTemplate);
 
         if (disp) {
-            console.log(`✅ All NFT token URIs verified correctly`);
-            console.log(`   NFT #1: ${uri1}`);
-            console.log(`   NFT #2: ${uri2}`);
-            console.log(`   NFT #3: ${uri3}`);
+            console.log(`✅ All NFT token URIs return correct template`);
+            console.log(`   Template: ${uri1}`);
+            console.log(`   Note: Clients replace {id} with actual token ID`);
         }
     });
 
@@ -125,6 +125,33 @@ describe("=== STREET NFT READ ONLY FUNCTIONS TESTS ===", () => {
             console.log(`   Deployer: [${deployerTokens}]`);
             console.log(`   Wallet1: [${wallet1Tokens}]`);
             console.log(`   Wallet2: [${wallet2Tokens}]`);
+        }
+    });
+
+    it("=== GET LAST TOKEN ID ===", () => {
+        // STEP 1: Check initial last token ID (should be 0 before any mints)
+        // last-token-id starts at u1, get-last-token-id returns (last-token-id - 1) = 0
+        let lastTokenId = getLastTokenId(disp);
+        expect(lastTokenId).toEqual(0);
+        
+        if (disp) {
+            console.log(`✅ Initial last token ID: ${lastTokenId} (no tokens minted yet)`);
+        }
+        
+        // STEP 2: Setup environment with multi-user liquidity state
+        // setupLiquidityUsers completes 3 mints:
+        //   - Deployer: epoch 1, NFT #1
+        //   - Wallet1: epoch 2, NFT #2
+        //   - Wallet2: epoch 3, NFT #3
+        setupLiquidityUsers(disp);
+        
+        // STEP 3: Check last token ID after 3 mints (should be 3)
+        lastTokenId = getLastTokenId(disp);
+        expect(lastTokenId).toEqual(3);
+        
+        if (disp) {
+            console.log(`✅ Last token ID after 3 mints: ${lastTokenId}`);
+            console.log(`   Tokens minted: #1 (deployer), #2 (wallet1), #3 (wallet2)`);
         }
     });
 });

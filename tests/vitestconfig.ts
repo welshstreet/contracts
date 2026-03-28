@@ -50,7 +50,7 @@ export const TOTAL_SUPPLY_WELSH =  10_000_000_000_000_000 // 10 billion natural 
 export const FEE = 100
 export const TAX = 100
 
-export const disp = true;
+export const disp = false;
 
 export const CREDIT_URI = "https://ipfs.io/ipfs/bafybeiexeg4tyoslafsnfpnob2kihdtl2lnhz4fupldtbtpp3y534ebkty/credit.json";
 export const STREET_URI = "https://ipfs.io/ipfs/bafybeiexeg4tyoslafsnfpnob2kihdtl2lnhz4fupldtbtpp3y534ebkty/street.json";

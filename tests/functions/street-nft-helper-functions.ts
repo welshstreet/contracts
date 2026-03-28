@@ -320,7 +320,6 @@ export function getNftOwner(
 
 export function getNftTokenUri(
   tokenId: number,
-  expectedUri: string,
   disp: boolean = false
 ) {
   if (disp) {
@@ -353,10 +352,8 @@ export function getNftTokenUri(
   
   const uri = uriOption.value.value;
   
-  expect(uri).toEqual(expectedUri);
-  
   if (disp) {
-    console.log(`✅ Token ${tokenId} URI: ${uri}`);
+    console.log(`✅ Token ${tokenId} URI template: ${uri}`);
   }
   
   return uri;
@@ -393,6 +390,36 @@ export function getNftBaseUri(
   }
   
   return uri;
+}
+
+export function getLastTokenId(
+  disp: boolean = false
+) {
+  if (disp) {
+    console.log(`\n=== getLastTokenId ===`);
+  }
+  
+  const test = simnet.callReadOnlyFn(
+    "street-nft",
+    "get-last-token-id",
+    [],
+    simnet.deployer
+  );
+  
+  if (disp) {
+    console.log(`Result type: ${test.result.type}`);
+  }
+  
+  // Success case - expect (ok uint)
+  expect(test.result.type).toEqual('ok');
+  
+  const lastTokenId = Number((test.result as any).value.value);
+  
+  if (disp) {
+    console.log(`✅ Last token ID: ${lastTokenId}`);
+  }
+  
+  return lastTokenId;
 }
 
 export function getUserMintedTokens(
