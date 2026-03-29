@@ -18,7 +18,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Manages CREDIT transfers with authorization controls and balance validation
 - Enables user-to-user LP token transfers outside of liquidity operations
 - Maintains accurate rewards accounting during LP token transfers
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x9ee4b659896e1af3b37b87f8e79515697dfa0e50c13aa18ce71e75a3686a0aac?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x031b4f129ff52fdfd7d3092a1d5656548621737e42be11064d9c2f6348315b71?chain=testnet)
 
 ### credit-token
 
@@ -27,7 +27,7 @@ The contracts form an integrated DeFi ecosystem where:
 - CREDIT tokens represent proportional ownership of liquidity pools
 - Handles minting, burning, and balance management for LP positions
 - Implements SIP-010 fungible token standard
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x4bd86c3929599dfbd09a963e131a3a3f7bb894d00fdd9023d021b1408522b770?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x576bda22ec032b2a3705271225cd5fc279034a02ed7463d8cb9d9089bc985cc6?chain=testnet)
 
 ### emission-controller
 
@@ -36,7 +36,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Mints STREET tokens on a per-block schedule to maintain perpetual rewards
 - Enforces emission intervals and eligibility requirements
 - Automatically routes emissions to the rewards contract
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x7ba045e99a36d6c9cbf7a87c8e8e1b39ad7940cd721bbb838bfd55b3609ae97d?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x4e2df147b90993902dbc2f1193f80a210fed194352e7b913b44f1b5de105edb4?chain=testnet)
 
 ### street-controller
 
@@ -45,7 +45,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Coordinates STREET distribution and NFT minting during genesis event
 - Collects WELSH donations for the rewards pool (1,000 WELSH per mint)
 - Enforces mint cap (21,000 NFTs) and per-user limits (2 NFTs)
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x0eb58ec2f441bd98421c8ba4c5c0ce4926986d4702736f414808b6101b35f189?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xc6ce6169598a8ea61c3a40bb615c1d414305f0097868a40521acaeec20daa406?chain=testnet)
 
 ### street-market
 
@@ -54,7 +54,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Supports five liquidity functions: initial, provide, remove, lock, and burn
 - Implements token swaps with fee collection (0.5% per side)
 - Features locked liquidity tracking and withdrawal tax (1%)
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x82f21946bfde3e05ef2998fe97c3cf9255953e9ccc481288f54eceb45825fc4a?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x6fc6488d9451503b5dd7980e6253127322a8a557314ba66585d88c57d98c024a?chain=testnet)
 
 ### street-nft
 
@@ -63,7 +63,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Mints 21,000 unique NFTs with token type and background attributes
 - Tracks user ownership (max 2 per user) and supports transfers
 - Non-fungible token representing participation in STREET distribution
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x9c427633ba6a8eb96f0c79fd15607ce087e40ee8cf9015e83bd190f1bae572ef?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x604ade0e118196208aac9faf260105d2e5f7b16158c576bb0ceb9767b44a163b?chain=testnet)
 
 ### street-rewards
 
@@ -72,7 +72,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Implements zero-debt cumulative distribution with global index accounting
 - Supports claiming of both WELSH and STREET token rewards
 - Handles cleanup of dust amounts and donation mechanisms
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x96a36e466a5c781868c3bc087668942b3d3e4bc3d8fb065b209657f112b66a5c?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x245aea740bf160bd5455df357a7fec89a8a0f705d5ec44df47dab3f509ff3e9c?chain=testnet)
 
 ### street-token
 
@@ -81,7 +81,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Initial supply: 2B STREET for liquidity + 3B for genesis distribution
 - Minted by emission-controller and street-controller only
 - Implements SIP-010 fungible token standard
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xbf979b1ba3938888fac622a2792e1def682ddbf8cfda717a6d61bd63f5f3085b?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x6417495fcad2e559feda4c2d18eae4ea3358e3febf74c2a5119719017dcee97f?chain=testnet)
 
 ### welsh-faucet
 
@@ -89,7 +89,7 @@ The contracts form an integrated DeFi ecosystem where:
 - **Testnet Faucet**: Provides testnet WELSH for development and testing
 - Implements cooldown period between requests
 - Testnet-only contract, not deployed to mainnet
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x4de816e9f3b600d3a69bd0f6da6b917caca29712cf7bcbff5b3e8afa977a68ce?chain=testnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xb101c92acf12cca1b8abcee57b9a2f0f787987928e16a2716ee42918ed07cd4a?chain=testnet)
 
 ### welshcorgicoin
 
@@ -97,4 +97,4 @@ The contracts form an integrated DeFi ecosystem where:
 - **WELSH Token**: Fixed-supply community token (10B total)
 - Exact replica of mainnet welshcorgicoin for testing purposes
 - Implements SIP-010 standard with transfer, balance, and metadata functions
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0xdfd6c2dd79880e950fdd3267a07acea59045ca8a4248ae73f6029e6ac46227dc?chain=testnet) [Mainnet](https://explorer.hiro.so/txid/SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin?chain=mainnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x224c79c6de8465b0646c2b865d9eb693be90a0a5b4fc89e5b29a0160663fa23d?chain=testnet) [Mainnet](https://explorer.hiro.so/txid/SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin?chain=mainnet)
