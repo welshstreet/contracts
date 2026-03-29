@@ -93,7 +93,7 @@ The contracts form an integrated DeFi ecosystem where:
 
 ### welshcorgicoin
 
-- **Contract:** `welshcorgicoin.clar`
+- **Contract:** `welshcorgicoin.clar` (testnet) `welshcorgicoin-token` (mainnet)
 - **WELSH Token**: Fixed-supply community token (10B total)
 - Exact replica of mainnet welshcorgicoin for testing purposes
 - Implements SIP-010 standard with transfer, balance, and metadata functions
