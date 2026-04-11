@@ -9,6 +9,14 @@ The contracts form an integrated DeFi ecosystem where:
 - Trading fees and STREET emissions accumulate in the rewards contract
 - LP token holders can claim proportional rewards at any time
 
+## Addresses
+
+These are the official deployer addresses.
+
+Mainnet: [SP2A7PT3DMWVT2BHHMKQ2T0Y4AA05NST96SDM2FCE](https://explorer.hiro.so/address/SP2A7PT3DMWVT2BHHMKQ2T0Y4AA05NST96SDM2FCE?chain=mainnet) 
+
+Testnet: [STY3JHZ0EKRC8BCRV4YQGA1CHN47M6Y4XQ240RVQ](https://explorer.hiro.so/address/STY3JHZ0EKRC8BCRV4YQGA1CHN47M6Y4XQ240RVQ?chain=testnet)
+
 ## Core Contracts
 
 ### credit-controller
@@ -27,7 +35,7 @@ The contracts form an integrated DeFi ecosystem where:
 - CREDIT tokens represent proportional ownership of liquidity pools
 - Handles minting, burning, and balance management for LP positions
 - Implements SIP-010 fungible token standard
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x576bda22ec032b2a3705271225cd5fc279034a02ed7463d8cb9d9089bc985cc6?chain=testnet) [Mainnet](https://explorer.hiro.so/txid/0x684758f3880fbdd9a070905c6d4265c8b8a627e5e807a5fd33dfd668fbcfaea3?chain=mainnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x576bda22ec032b2a3705271225cd5fc279034a02ed7463d8cb9d9089bc985cc6?chain=testnet) [Mainnet](https://explorer.hiro.so/token/SP2A7PT3DMWVT2BHHMKQ2T0Y4AA05NST96SDM2FCE.credit-token?chain=mainnet)
 
 ### emission-controller
 
@@ -81,7 +89,7 @@ The contracts form an integrated DeFi ecosystem where:
 - Initial supply: 2B STREET for liquidity + 3B for genesis distribution
 - Minted by emission-controller and street-controller only
 - Implements SIP-010 fungible token standard
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x6417495fcad2e559feda4c2d18eae4ea3358e3febf74c2a5119719017dcee97f?chain=testnet) [Mainnet](https://explorer.hiro.so/txid/0x8615a4abb71481024cddc327a4af5880ea454cb72d0e2807f4c9c42226b5ca40?chain=mainnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x6417495fcad2e559feda4c2d18eae4ea3358e3febf74c2a5119719017dcee97f?chain=testnet) [Mainnet](https://explorer.hiro.so/token/SP2A7PT3DMWVT2BHHMKQ2T0Y4AA05NST96SDM2FCE.street-token?chain=mainnet)
 
 ### welsh-faucet
 
@@ -97,4 +105,4 @@ The contracts form an integrated DeFi ecosystem where:
 - **WELSH Token**: Fixed-supply community token (10B total)
 - Exact replica of mainnet welshcorgicoin for testing purposes
 - Implements SIP-010 standard with transfer, balance, and metadata functions
-- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x224c79c6de8465b0646c2b865d9eb693be90a0a5b4fc89e5b29a0160663fa23d?chain=testnet) [Mainnet](https://explorer.hiro.so/txid/SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token?chain=mainnet)
+- **Contract Links:** [Testnet](https://explorer.hiro.so/txid/0x224c79c6de8465b0646c2b865d9eb693be90a0a5b4fc89e5b29a0160663fa23d?chain=testnet) [Mainnet](https://explorer.hiro.so/token/SP3NE50GEXFG9SZGTT51P40X2CKYSZ5CC4ZTZ7A2G.welshcorgicoin-token?chain=mainnet)
